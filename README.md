@@ -3,18 +3,18 @@
 
 ## Título
 
-    Desarrollo de Rootkits de modo Kernel en Windows
+Desarrollo de Rootkits de modo Kernel en Windows
 
 
 ## Descripción
 
-    Un rootkit es una herramienta esencial dentro del arsenal que todo experto en ciberseguridad debe poseer, y también un vector de ataque utilizado por actores maliciosos. Al adentrarnos en el fascinante mundo de su desarrollo, transformaremos ese concepto a un formato comprensible y aplicable, obteniendo un malware con capacidades ilimitadas de persistencia y control sobre una máquina. Durante esta formación, todos los asistentes llevarán a cabo la implementación de un Rootkit de modo kernel, orientado a sistemas operativos Windows 10 y 11, desde cero.
+Un rootkit es una herramienta esencial dentro del arsenal que todo experto en ciberseguridad debe poseer, y también un vector de ataque utilizado por actores maliciosos. Al adentrarnos en el fascinante mundo de su desarrollo, transformaremos ese concepto a un formato comprensible y aplicable, obteniendo un malware con capacidades ilimitadas de persistencia y control sobre una máquina. Durante esta formación, todos los asistentes llevarán a cabo la implementación de un Rootkit de modo kernel, orientado a sistemas operativos Windows 10 y 11, desde cero.
 
-    Primero, a través de casos prácticos, obtendremos un conocimiento profundo sobre conceptos relacionados con el kernel de windows, como las estructuras opacas, los drivers, los mecanismos de protección existentes, y un largo etcétera de fundamentos asociados a esta temática.
+Primero, a través de casos prácticos, obtendremos un conocimiento profundo sobre conceptos relacionados con el kernel de windows, como las estructuras opacas, los drivers, los mecanismos de protección existentes, y un largo etcétera de fundamentos asociados a esta temática.
 
-    Una vez explorados los aspectos clave de la seguridad del kernel y cómo los rootkits pueden manipular este nivel para lograr el control del sistema, crearemos un entorno de desarrollo y construiremos la base, un driver de modo kernel que modifique estructuras y cuente con funcionalidades que permitan la ejecución de código.
+Una vez explorados los aspectos clave de la seguridad del kernel y cómo los rootkits pueden manipular este nivel para lograr el control del sistema, crearemos un entorno de desarrollo y construiremos la base, un driver de modo kernel que modifique estructuras y cuente con funcionalidades que permitan la ejecución de código.
 
-    En el tramo final, una vez completada la implementación, se proporcionará una recopilación de materiales y guías adecuadas para que los asistentes profundicen en dicha área de conocimiento.
+En el tramo final, una vez completada la implementación, se proporcionará una recopilación de materiales y guías adecuadas para que los asistentes profundicen en dicha área de conocimiento.
 
 
 ## Objetivos
