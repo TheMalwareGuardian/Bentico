@@ -104,3 +104,8 @@ Finalmente, completada la implementación, se proporcionarán recursos para prof
         - IRPs
     - Aplicación del ejercicio
 - Materiales, reconocimiento y conclusiones
+
+
+## Recursos
+
+* ***[Awesome Bootkits & Rootkits Development](https://github.com/TheMalwareGuardian/Awesome-Bootkits-Rootkits-Development)***: Recopilación (+100) de recursos sobre el desarrollo de bootkits y rootkits.
