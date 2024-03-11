@@ -2,13 +2,10 @@
 #include <ntddk.h>
 #include <wdm.h>
 
-
-VOID
-sCreateProcessNotifyRoutine(
-	_In_	HANDLE		ppid,
-	_In_	HANDLE		pid,
-	_In_	BOOLEAN		create
-)
+VOID sCreateProcessNotifyRoutine(
+	_In_ HANDLE ppid,
+	_In_ HANDLE pid,
+	_In_ BOOLEAN create)
 {
 	if (create)
 	{
@@ -29,13 +26,10 @@ sCreateProcessNotifyRoutine(
 	}
 }
 
-
-VOID
-sCreateProcessNotifyRoutineEx(
-	_In_	PEPROCESS					process,
-	_In_	HANDLE						pid,
-	_In_	PPS_CREATE_NOTIFY_INFO		createInfo
-)
+VOID sCreateProcessNotifyRoutineEx(
+	_In_ PEPROCESS process,
+	_In_ HANDLE pid,
+	_In_ PPS_CREATE_NOTIFY_INFO createInfo)
 {
 	UNREFERENCED_PARAMETER(process);
 	UNREFERENCED_PARAMETER(pid);
@@ -51,13 +45,10 @@ sCreateProcessNotifyRoutineEx(
 	}
 }
 
-
-VOID
-sLoadImageNotifyRoutine(
-	_In_	PUNICODE_STRING		imageName,
-	_In_	HANDLE				pid,
-	_In_	PIMAGE_INFO			imageInfo
-)
+VOID sLoadImageNotifyRoutine(
+	_In_ PUNICODE_STRING imageName,
+	_In_ HANDLE pid,
+	_In_ PIMAGE_INFO imageInfo)
 {
 	UNREFERENCED_PARAMETER(imageInfo);
 
@@ -70,13 +61,10 @@ sLoadImageNotifyRoutine(
 	DbgPrint("%wZ (%d) loaded %wZ", processName, pid, imageName);
 }
 
-
-VOID
-sCreateThreadNotifyRoutine(
-	_In_	HANDLE		pid,
-	_In_	HANDLE		tid,
-	_In_	BOOLEAN		create
-)
+VOID sCreateThreadNotifyRoutine(
+	_In_ HANDLE pid,
+	_In_ HANDLE tid,
+	_In_ BOOLEAN create)
 {
 	if (create)
 	{
@@ -88,13 +76,10 @@ sCreateThreadNotifyRoutine(
 	}
 }
 
-
-VOID
-DriverUnload(
-	_In_	PDRIVER_OBJECT		pDriverObject
-)
+VOID DriverUnload(
+	_In_ PDRIVER_OBJECT pDriverObject)
 {
-    UNREFERENCED_PARAMETER(pDriverObject);
+	UNREFERENCED_PARAMETER(pDriverObject);
 
 	DbgPrint("Rootkit POC: Unsubscribe to notifications");
 
@@ -103,21 +88,19 @@ DriverUnload(
 	PsRemoveCreateThreadNotifyRoutine(sCreateThreadNotifyRoutine);
 	PsSetCreateProcessNotifyRoutineEx(sCreateProcessNotifyRoutineEx, TRUE);
 
-    DbgPrint("Rootkit POC: Unloading... Service has stopped");
+	DbgPrint("Rootkit POC: Unloading... Service has stopped");
 }
-
 
 NTSTATUS
 DriverEntry(
-	_In_	PDRIVER_OBJECT		pDriverObject,
-	_In_	PUNICODE_STRING		pRegistryPath
-)
+	_In_ PDRIVER_OBJECT pDriverObject,
+	_In_ PUNICODE_STRING pRegistryPath)
 {
-    UNREFERENCED_PARAMETER(pRegistryPath);
+	UNREFERENCED_PARAMETER(pRegistryPath);
 
-    pDriverObject->DriverUnload = DriverUnload;
+	pDriverObject->DriverUnload = DriverUnload;
 
-    DbgPrint("Rootkit POC: Loading... Hello World");
+	DbgPrint("Rootkit POC: Loading... Hello World");
 
 	DbgPrint("Rootkit POC: Subscribe to notifications");
 
@@ -126,5 +109,5 @@ DriverEntry(
 	PsSetCreateThreadNotifyRoutine(sCreateThreadNotifyRoutine);
 	PsSetCreateProcessNotifyRoutineEx(sCreateProcessNotifyRoutineEx, FALSE);
 
-    return STATUS_SUCCESS;
+	return STATUS_SUCCESS;
 }

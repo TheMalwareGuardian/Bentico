@@ -175,7 +175,7 @@ DriverUnload(
 )
 {
 	// Preventing compiler warnings for unused parameter
-    UNREFERENCED_PARAMETER(pDriverObject);
+	UNREFERENCED_PARAMETER(pDriverObject);
 
 	// Print a debug message to indicate the unsubscription to various kernel event notifications
 	DbgPrint("Rootkit POC: Unsubscribe to notifications");
@@ -191,7 +191,7 @@ DriverUnload(
 	PsSetCreateProcessNotifyRoutineEx(sCreateProcessNotifyRoutineEx, TRUE);				// https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/ntddk/nf-ntddk-pssetcreateprocessnotifyroutineex
 
 	// Print a debug message to indicate the driver has been unloaded
-    DbgPrint("Rootkit POC: Unloading... Service has stopped");							// https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-dbgprint
+	DbgPrint("Rootkit POC: Unloading... Service has stopped");							// https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-dbgprint
 }
 
 
@@ -213,13 +213,13 @@ DriverEntry(
 )
 {
 	// Preventing compiler warnings for unused parameter
-    UNREFERENCED_PARAMETER(pRegistryPath);
+	UNREFERENCED_PARAMETER(pRegistryPath);
 
 	// Set DriverUnload routine
-    pDriverObject->DriverUnload = DriverUnload;                                         // https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
+	pDriverObject->DriverUnload = DriverUnload;                                         // https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
 
 	// Print a debug message to indicate the driver has been loaded
-    DbgPrint("Rootkit POC: Loading... Hello World");                                    // https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-dbgprint
+	DbgPrint("Rootkit POC: Loading... Hello World");                                    // https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-dbgprint
 
 	// Print a debug message to indicate the subscription to various kernel event notifications
 	DbgPrint("Rootkit POC: Subscribe to notifications");
@@ -235,7 +235,7 @@ DriverEntry(
 	PsSetCreateProcessNotifyRoutineEx(sCreateProcessNotifyRoutineEx, FALSE);			// https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/ntddk/nf-ntddk-pssetcreateprocessnotifyroutineex
 
 	// Driver initialization was completed successfully
-    return STATUS_SUCCESS;
+	return STATUS_SUCCESS;
 }
 
 
