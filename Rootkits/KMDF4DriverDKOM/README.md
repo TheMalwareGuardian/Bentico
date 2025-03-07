@@ -219,7 +219,7 @@ DriverUnload(
     UNREFERENCED_PARAMETER(pDriverObject);
 
     // Print a debug message to indicate the driver has been unloaded
-    DbgPrint("Rootkit POC: Unloading... Service has stopped");							// https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-dbgprint
+    DbgPrint("Rootkit POC: Unloading... Service has stopped");                          // https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-dbgprint
 }
 
 

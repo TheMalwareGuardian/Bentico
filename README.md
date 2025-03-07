@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="images/Bentico_Squid_Construction.png">
+  <img src="Images/Bentico_Squid_Construction.png">
 </p>
 
 

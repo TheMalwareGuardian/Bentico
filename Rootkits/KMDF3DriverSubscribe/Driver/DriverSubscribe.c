@@ -2,10 +2,12 @@
 #include <ntddk.h>
 #include <wdm.h>
 
-VOID sCreateProcessNotifyRoutine(
+VOID
+sCreateProcessNotifyRoutine(
 	_In_ HANDLE ppid,
 	_In_ HANDLE pid,
-	_In_ BOOLEAN create)
+	_In_ BOOLEAN create
+)
 {
 	if (create)
 	{
@@ -26,10 +28,12 @@ VOID sCreateProcessNotifyRoutine(
 	}
 }
 
-VOID sCreateProcessNotifyRoutineEx(
+VOID
+sCreateProcessNotifyRoutineEx(
 	_In_ PEPROCESS process,
 	_In_ HANDLE pid,
-	_In_ PPS_CREATE_NOTIFY_INFO createInfo)
+	_In_ PPS_CREATE_NOTIFY_INFO createInfo
+)
 {
 	UNREFERENCED_PARAMETER(process);
 	UNREFERENCED_PARAMETER(pid);
@@ -45,10 +49,12 @@ VOID sCreateProcessNotifyRoutineEx(
 	}
 }
 
-VOID sLoadImageNotifyRoutine(
+VOID
+sLoadImageNotifyRoutine(
 	_In_ PUNICODE_STRING imageName,
 	_In_ HANDLE pid,
-	_In_ PIMAGE_INFO imageInfo)
+	_In_ PIMAGE_INFO imageInfo
+)
 {
 	UNREFERENCED_PARAMETER(imageInfo);
 
@@ -61,10 +67,12 @@ VOID sLoadImageNotifyRoutine(
 	DbgPrint("%wZ (%d) loaded %wZ", processName, pid, imageName);
 }
 
-VOID sCreateThreadNotifyRoutine(
+VOID
+sCreateThreadNotifyRoutine(
 	_In_ HANDLE pid,
 	_In_ HANDLE tid,
-	_In_ BOOLEAN create)
+	_In_ BOOLEAN create
+)
 {
 	if (create)
 	{
@@ -76,8 +84,10 @@ VOID sCreateThreadNotifyRoutine(
 	}
 }
 
-VOID DriverUnload(
-	_In_ PDRIVER_OBJECT pDriverObject)
+VOID
+DriverUnload(
+	_In_ PDRIVER_OBJECT pDriverObject
+)
 {
 	UNREFERENCED_PARAMETER(pDriverObject);
 
@@ -94,7 +104,8 @@ VOID DriverUnload(
 NTSTATUS
 DriverEntry(
 	_In_ PDRIVER_OBJECT pDriverObject,
-	_In_ PUNICODE_STRING pRegistryPath)
+	_In_ PUNICODE_STRING pRegistryPath
+)
 {
 	UNREFERENCED_PARAMETER(pRegistryPath);
 

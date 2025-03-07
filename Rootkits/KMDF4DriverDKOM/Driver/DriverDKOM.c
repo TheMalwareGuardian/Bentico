@@ -8,8 +8,10 @@ typedef struct _HideProcessData
     BOOLEAN AvoidBSOD;
 } HideProcessData;
 
-VOID AvoidBSOD_RemoveProcessLinks(
-    _In_ PLIST_ENTRY CurrListEntry)
+VOID
+AvoidBSOD_RemoveProcessLinks(
+    _In_ PLIST_ENTRY CurrListEntry
+)
 {
     PLIST_ENTRY Previous, Next;
     Previous = (CurrListEntry->Blink);
@@ -26,9 +28,11 @@ VOID AvoidBSOD_RemoveProcessLinks(
     return;
 }
 
-VOID WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByPid(
+VOID
+WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByPid(
     _In_ UINT32 pid,
-    _In_ BOOLEAN AvoidBSOD)
+    _In_ BOOLEAN AvoidBSOD
+)
 {
     UINT32 *currUniqueProcessId = NULL;
 
@@ -66,9 +70,11 @@ VOID WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByPid(
     }
 }
 
-VOID WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByName(
+VOID
+WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByName(
     _In_ char *ProcessName,
-    _In_ BOOLEAN AvoidBSOD)
+    _In_ BOOLEAN AvoidBSOD
+)
 {
     char *currImageFileName = NULL;
 
@@ -106,8 +112,10 @@ VOID WarningWinDbgOffsets_WarningPatchguard_DKOM_HideProcess_ByName(
     }
 }
 
-VOID DriverUnload(
-    _In_ PDRIVER_OBJECT pDriverObject)
+VOID
+DriverUnload(
+    _In_ PDRIVER_OBJECT pDriverObject
+)
 {
     UNREFERENCED_PARAMETER(pDriverObject);
 
@@ -117,7 +125,8 @@ VOID DriverUnload(
 NTSTATUS
 DriverEntry(
     _In_ PDRIVER_OBJECT pDriverObject,
-    _In_ PUNICODE_STRING pRegistryPath)
+    _In_ PUNICODE_STRING pRegistryPath
+)
 {
     UNREFERENCED_PARAMETER(pRegistryPath);
 
