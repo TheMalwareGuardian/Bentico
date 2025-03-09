@@ -17,10 +17,10 @@
 * [Windows Kernel](#windowskernel)
 * [Security Measures](#windowssecuritymeasures)
 * [Building a Windows Kernel Mode Driver](#buildingawindowskernelmodedriver)
+* [Bentico Windows Rootkit](#benticowindowsrootkit)
 * [Cybersecurity Conferences](#cybersecurityconferences)
 * [Resources](#resources)
 * [Contact](#contact)
-<!--* [Bentico Windows Rootkit](#benticowindowsbootkit)-->
 
 
 ---
@@ -188,7 +188,7 @@ That's ultimately my goal - bringing this complex field closer to you 😊.
 
 ## 🎙️ Cybersecurity Conferences
 
-* ***[Rooted 2025]()***: Desde las Profundidades del Kernel: Cómo Crear un Rootkit Invisible en Windows (Videos and Photos).
+* ***[Rooted 2025](https://drive.proton.me/urls/M9ABQ4YMYW#okpNc3E91u4s)***: Desde las Profundidades del Kernel: Cómo Crear un Rootkit Invisible en Windows (Videos and Photos).
 
 
 ---
