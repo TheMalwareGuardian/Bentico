@@ -128,7 +128,7 @@ Kernel Mode development is essential for:
 
 <div id='buildingawindowskernelmodedriverrequirements'/>
 
-### Requirements
+### 🛠️ Requirements
 
 To set up the necessary environment for Kernel Mode drivers development using WDK on [Windows](https://github.com/tianocore/tianocore.github.io/wiki/Windows-systems), the following virtual machines (VMs), tools, and packages are essential:
 
@@ -142,9 +142,9 @@ To set up the necessary environment for Kernel Mode drivers development using WD
 
 <div id='buildingawindowskernelmodedriverscript'/>
 
-### Script
+### 📜 Script
 
-To simplify the process of establishing a Rootkit development environment on Windows, a corresponding PowerShell script [Setup_Development_Environment.ps1](Environment/Setup_Development_Environment.ps1) has been created. This script is designed to walk you through the necessary downloads and installations.
+To simplify the process of establishing a Rootkit development environment on Windows, a corresponding PowerShell script [Setup_Development_Environment.ps1](https://github.com/TheMalwareGuardian/Bootkits-Rootkits-Development-Environment/blob/main/Scripts/Setup_Development_Environment_Windows.ps1) has been created. This script is designed to walk you through the necessary downloads and installations.
 
 <p align="center">
 	<img width="800px" src="Images/Illustrations/Run_Script_Setup_Environment.png">
@@ -153,7 +153,7 @@ To simplify the process of establishing a Rootkit development environment on Win
 
 <div id='buildingawindowskernelmodedriverprojectsetup'/>
 
-### Project Setup
+### 🏗️ Project Setup
 
 To start developing a Kernel Mode Driver, follow these steps to create your project and workspace:
 
@@ -188,7 +188,19 @@ That's ultimately my goal - bringing this complex field closer to you 😊.
 
 ## 🎙️ Cybersecurity Conferences
 
-* ***[Rooted 2025](https://drive.proton.me/urls/M9ABQ4YMYW#okpNc3E91u4s)***: Desde las Profundidades del Kernel: Cómo Crear un Rootkit Invisible en Windows (Videos and Photos).
+📁 You can find all materials related to these events (slides, demos, extra resources) in the [`Cybersecurity Conferences`](https://github.com/TheMalwareGuardian/Bentico/tree/main/Cybersecurity%20Conferences) folder of this repository.
+
+* ***[Youtube Video - RootedCON Madrid 2025](https://www.youtube.com/watch?v=W7jj1e30ADU)***: From Deep Within the Kernel: How to Build an Invisible Rootkit on Windows [ES]
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=W7jj1e30ADU" target="_blank">
+    <img width="800px" src="Images/Illustrations/Youtube_Video_2025_RootedCON_Madrid.png" alt="Click to watch the video">
+  </a>
+  <br>
+  <em>Spanish Version – Desde las Profundidades del Kernel: Cómo Crear un Rootkit Invisible en Windows</em>
+</p>
+
+* ***ViCONgal 2025*** *(incoming)*: Confirmed participation with a new session on advanced malware development.
 
 
 ---
