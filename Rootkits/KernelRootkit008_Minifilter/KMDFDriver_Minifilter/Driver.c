@@ -3,46 +3,46 @@
 
 
 
-// Name:							KernelRootkit008_Minifilter
-// IDE:								Open Visual Studio
-// Template:						Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
-// Project:							Project Name: KMDFDriver_Minifilter -> Solution Name: KernelRootkit008_Minifilter -> Create
-// Source File:						Source Files -> Add -> New Item... -> Driver.c
-// Source Code:						Open Driver.c and copy the corresponding source code
-// Library Dependencies:			Open Project Properties -> Linker -> Additional Dependencies -> Add '$(DDK_LIB_PATH)fltMgr.lib;'
-// Build Project:					Set Configuration to Release, x64 -> Build -> Build Solution
-// Add Project:						In Solution Explorer -> Right-click the solution (KernelRootkit008_Minifilter) -> Add -> New Project...
-// Template:						Search for templates (Alt + S) -> Console App -> Next
-// Project:							Project Name: ConsoleApp_MinifilterInstallation -> Create
-// Source File:						In Solution Explorer -> Find ConsoleApp_MinifilterApplication.cpp -> Rename to Application.c
-// Source Code:						Open Application.c and copy the corresponding source code
-// Build Project:					Set Configuration to Release, x64 -> Build -> Build Solution
-// Locate Driver:					C:\Users\%USERNAME%\source\repos\KernelRootkit008_Minifilter\x64\Release\KMDFDriver_Minifilter.sys
-// Locate App:						C:\Users\%USERNAME%\source\repos\KernelRootkit008_Minifilter\x64\Release\ConsoleApp_MinifilterInstallation.exe
-// Virtual Machine:					Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
-// Move Driver:						Copy KMDFDriver_Minifilter.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_Minifilter.sys (VM)
-// Move App:						Move ConsoleApp_MinifilterInstallation.exe (Host) to C:\Users\%USERNAME%\Downloads\ConsoleApp_MinifilterInstallation.exe (VM)
-// Enable Test Mode:				Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
+// Name:                            KernelRootkit008_Minifilter
+// IDE:                             Open Visual Studio
+// Template:                        Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
+// Project:                         Project Name: KMDFDriver_Minifilter -> Solution Name: KernelRootkit008_Minifilter -> Create
+// Source File:                     Source Files -> Add -> New Item... -> Driver.c
+// Source Code:                     Open Driver.c and copy the corresponding source code
+// Library Dependencies:            Open Project Properties -> Linker -> Additional Dependencies -> Add '$(DDK_LIB_PATH)fltMgr.lib;'
+// Build Project:                   Set Configuration to Release, x64 -> Build -> Build Solution
+// Add Project:                     In Solution Explorer -> Right-click the solution (KernelRootkit008_Minifilter) -> Add -> New Project...
+// Template:                        Search for templates (Alt + S) -> Console App -> Next
+// Project:                         Project Name: ConsoleApp_MinifilterInstallation -> Create
+// Source File:                     In Solution Explorer -> Find ConsoleApp_MinifilterApplication.cpp -> Rename to Application.c
+// Source Code:                     Open Application.c and copy the corresponding source code
+// Build Project:                   Set Configuration to Release, x64 -> Build -> Build Solution
+// Locate Driver:                   C:\Users\%USERNAME%\source\repos\KernelRootkit008_Minifilter\x64\Release\KMDFDriver_Minifilter.sys
+// Locate App:                      C:\Users\%USERNAME%\source\repos\KernelRootkit008_Minifilter\x64\Release\ConsoleApp_MinifilterInstallation.exe
+// Virtual Machine:                 Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
+// Move Driver:                     Copy KMDFDriver_Minifilter.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_Minifilter.sys (VM)
+// Move App:                        Move ConsoleApp_MinifilterInstallation.exe (Host) to C:\Users\%USERNAME%\Downloads\ConsoleApp_MinifilterInstallation.exe (VM)
+// Enable Test Mode:                Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
 // Driver Installation:
-	// Option 1: Manual Registration with sc.exe
-			// 1.1 Register Minifilter:	Open a CMD window as Administrator -> sc.exe create WindowsKernelMinifilter type=filesys start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_Minifilter.sys"
-			// 1.2 Set Required Registry Keys: Run ConsoleApp_MinifilterInstallation.exe as Administrator
-	// or
-	// Option 2: Using OSR Driver Loader
-			// 2.1 Open OSR Driver Loader -> Select KMDFDriver_Minifilter.sys
-			// 2.2 Set type to MiniFilter -> Click Register Service
-			// 2.3 Click Start Service to load the driver
-	// or
-	// Option 3: Auto-Configuration via Driver Entry
-			// 3.1 Uncomment the registry setup code inside DriverEntry in KMDFDriver_Minifilter
-			// 3.2 Compile and rebuild the driver
-			// 3.3 Loading the driver will automatically set the required registry keys
-// Check Registered Driver:			Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelMinifilter
-// Monitor Minifilter Messages:		Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
-// Load:							Run in CMD as Administrator -> fltmc load WindowsKernelMinifilter
-// List Minifilters:				Run in CMD as Administrator -> fltmc
-// Unload:							Run in CMD as Administrator -> fltmc unload WindowsKernelMinifilter
-// Remove:							Run in CMD as Administrator -> sc.exe delete WindowsKernelMinifilter
+    // Option 1: Manual Registration with sc.exe
+            // 1.1 Register Minifilter: Open a CMD window as Administrator -> sc.exe create WindowsKernelMinifilter type=filesys start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_Minifilter.sys"
+            // 1.2 Set Required Registry Keys: Run ConsoleApp_MinifilterInstallation.exe as Administrator
+    // or
+    // Option 2: Using OSR Driver Loader
+            // 2.1 Open OSR Driver Loader -> Select KMDFDriver_Minifilter.sys
+            // 2.2 Set type to MiniFilter -> Click Register Service
+            // 2.3 Click Start Service to load the driver
+    // or
+    // Option 3: Auto-Configuration via Driver Entry
+            // 3.1 Uncomment the registry setup code inside DriverEntry in KMDFDriver_Minifilter
+            // 3.2 Compile and rebuild the driver
+            // 3.3 Loading the driver will automatically set the required registry keys
+// Check Registered Driver:         Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelMinifilter
+// Monitor Minifilter Messages:     Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
+// Load:                            Run in CMD as Administrator -> fltmc load WindowsKernelMinifilter
+// List Minifilters:                Run in CMD as Administrator -> fltmc
+// Unload:                          Run in CMD as Administrator -> fltmc unload WindowsKernelMinifilter
+// Remove:                          Run in CMD as Administrator -> sc.exe delete WindowsKernelMinifilter
 
 
 
@@ -66,14 +66,10 @@
 // Global handle for the minifilter
 PFLT_FILTER gFilterHandle = NULL;
 
-
-
 // List of filenames to block from being deleted
 const wchar_t* DeletionBlockList[] = {
 	L"DENY_DELETION.TXT"
 };
-
-
 
 // List of filenames to block from being accessed
 const wchar_t* AccessBlockList[] = {
@@ -82,21 +78,39 @@ const wchar_t* AccessBlockList[] = {
 
 
 
-// Function Prototypes
+// START -> FUNCTION PROTOTYPES ---------------------------------------------------------------------------------------------------------------
+// START -> FUNCTION PROTOTYPES ---------------------------------------------------------------------------------------------------------------
+
+
+
+// Unload
 NTSTATUS MinifilterUnload(FLT_FILTER_UNLOAD_FLAGS Flags);
+
+// Blocking file deletion
 FLT_PREOP_CALLBACK_STATUS CallbackPreSetInformation(PFLT_CALLBACK_DATA Data, PCFLT_RELATED_OBJECTS FltObjects, PVOID* CompletionContext);
+
+// Blocking file access
 FLT_PREOP_CALLBACK_STATUS CallbackPreCreate(PFLT_CALLBACK_DATA Data, PCFLT_RELATED_OBJECTS FltObjects, PVOID* CompletionContext);
 
+
+
+// START -> CALLBACK AND FILTER DEFINITIONS ---------------------------------------------------------------------------------------------------
+// START -> CALLBACK AND FILTER DEFINITIONS ---------------------------------------------------------------------------------------------------
+
+
+
 // Callback registration array
+// The FLT_OPERATION_REGISTRATION structure is used to register operation callback routines.
+// https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/fltkernel/ns-fltkernel-_flt_operation_registration
 const FLT_OPERATION_REGISTRATION OperationCallbacks[] = {
-	{IRP_MJ_SET_INFORMATION, 0, CallbackPreSetInformation, NULL},	// For blocking file deletion
-	{IRP_MJ_CREATE, 0, CallbackPreCreate, NULL},					// For blocking file access
+	{IRP_MJ_SET_INFORMATION, 0, CallbackPreSetInformation, NULL},
+	{IRP_MJ_CREATE, 0, CallbackPreCreate, NULL},
 	{IRP_MJ_OPERATION_END}
 };
 
-
-
 // Filter registration structure
+// The FLT_REGISTRATION structure is passed as a parameter to FltRegisterFilter.
+// https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/fltkernel/ns-fltkernel-_flt_registration
 const FLT_REGISTRATION FilterRegistration = {
 	sizeof(FLT_REGISTRATION),
 	FLT_REGISTRATION_VERSION,
@@ -104,7 +118,7 @@ const FLT_REGISTRATION FilterRegistration = {
 	NULL,
 	OperationCallbacks,
 	MinifilterUnload,
-	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
 };
 
 
@@ -169,20 +183,17 @@ MinifilterUnload(
 
 /**
 	@brief		Pre-operation callback to intercept and potentially block file deletion requests.
-
-				This function is invoked for file operations associated with setting file information, specifically when attempting to delete a file. It examines the requested file operation, checks if the target file is in the predefined block list for deletion, and if so, prevents the deletion by denying access.
-
-
-				FLT_CALLBACK_DATA			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/fltkernel/ns-fltkernel-_flt_callback_data
-	@param		Data						Pointer to the callback data structure containing details about the file operation.
+	@details	This function is invoked for file operations associated with setting file information, specifically when attempting to delete a file. It examines the requested file operation, checks if the target file is in the predefined block list for deletion, and if so, prevents the deletion by denying access.
 
 
-				PCFLT_RELATED_OBJECTS		https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/fltkernel/ns-fltkernel-_flt_related_objects
-	@param		FltObjects					Pointer to related objects for the filter operation.
+	@see		FLT_CALLBACK_DATA			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/fltkernel/ns-fltkernel-_flt_callback_data
+	@param[in]	Data						Pointer to the callback data structure containing details about the file operation.
 
+	@see		PCFLT_RELATED_OBJECTS		https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/fltkernel/ns-fltkernel-_flt_related_objects
+	@param[in]	FltObjects					Pointer to related objects for the filter operation.
 
-				PVOID						https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#PVOID
-	@param		CompletionContext			Pointer to a context for the completion of the operation.
+	@see		PVOID						https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#PVOID
+	@param[out]	CompletionContext			Pointer to a context for the completion of the operation.
 
 
 	@return		A FLT_PREOP_CALLBACK_STATUS value indicating whether the operation is allowed or blocked.
@@ -306,20 +317,17 @@ CallbackPreSetInformation(
 
 /**
 	@brief		Pre-operation callback to intercept and potentially block file access requests.
-
-				This function is invoked when a file access operation is initiated (IRP_MJ_CREATE). It examines the requested file operation, checks if the target file is in the predefined block list for access restriction, and if so, prevents access by denying it.
-
-
-				FLT_CALLBACK_DATA			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/fltkernel/ns-fltkernel-_flt_callback_data
-	@param		Data						Pointer to the callback data structure containing details about the file operation.
+	@details	This function is invoked when a file access operation is initiated (IRP_MJ_CREATE). It examines the requested file operation, checks if the target file is in the predefined block list for access restriction, and if so, prevents access by denying it.
 
 
-				PCFLT_RELATED_OBJECTS		https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/fltkernel/ns-fltkernel-_flt_related_objects
-	@param		FltObjects					Pointer to related objects for the filter operation.
+	@see		FLT_CALLBACK_DATA			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/fltkernel/ns-fltkernel-_flt_callback_data
+	@param[in]	Data						Pointer to the callback data structure containing details about the file operation.
 
+	@see		PCFLT_RELATED_OBJECTS		https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/fltkernel/ns-fltkernel-_flt_related_objects
+	@param[in]	FltObjects					Pointer to related objects for the filter operation.
 
-				PVOID						https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#PVOID
-	@param		CompletionContext			Pointer to a context for the completion of the operation.
+	@see		PVOID						https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#PVOID
+	@param[out]	CompletionContext			Pointer to a context for the completion of the operation.
 
 
 	@return		A FLT_PREOP_CALLBACK_STATUS value indicating whether the operation is allowed or blocked.
@@ -418,24 +426,22 @@ CallbackPreCreate(
 
 /**
 	@brief		Entry point for the minifilter driver.
-
-				This function is called when the minifilter driver is loaded into memory. It initializes the driver, registers the filter with the Windows Filter Manager, and starts filtering operations.
-
-
-				PDRIVER_OBJECT				https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		DriverObject				Pointer to the driver object representing the minifilter driver in the Windows kernel.
+	@details	This function is called when the minifilter driver is loaded into memory. It initializes the driver, registers the filter with the Windows Filter Manager, and starts filtering operations.
 
 
-				PUNICODE_STRING				https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
-	@param		RegistryPath				Pointer to the registry path where the driver’s configuration settings are stored.
+	@see		PDRIVER_OBJECT				https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	DriverObject				Pointer to the driver object representing the minifilter driver in the Windows kernel.
+
+	@see		PUNICODE_STRING				https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
+	@param[in]	RegistryPath				Pointer to the registry path where the driver’s configuration settings are stored.
 
 
 	@return		A NTSTATUS value indicating success or failure of the driver initialization.
 **/
 NTSTATUS
 DriverEntry(
-	_In_		PDRIVER_OBJECT		DriverObject,
-	_In_		PUNICODE_STRING		RegistryPath
+	_In_		PDRIVER_OBJECT				DriverObject,
+	_In_		PUNICODE_STRING				RegistryPath
 )
 {
 	// ---------------------------------------------------------------------------------------------------------------------
@@ -648,3 +654,8 @@ DriverEntry(
 	// Return
 	return status;
 }
+
+
+
+// --------------------------------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------------------------------

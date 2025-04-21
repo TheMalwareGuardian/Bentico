@@ -3,46 +3,46 @@
 
 
 
-// Name:							KernelRootkit008_Minifilter
-// IDE:								Open Visual Studio
-// Template:						Create a new project -> Search for templates (Alt + S) -> Console App -> Next
-// Project:							Project Name: ConsoleApp_MinifilterInstallation -> Solution Name: KernelRootkit008_Minifilter -> Create
-// Source File:						In Solution Explorer -> Find ConsoleApp_Application.cpp -> Rename to Application.c
-// Source Code:						Open Application.c and copy the corresponding source code
-// Build Project:					Set Configuration to Release, x64 -> Build -> Build Solution
-// Add Project:						In Solution Explorer -> Right-click the solution (KernelRootkit008_Minifilter) -> Add -> New Project...
-// Template:						Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
-// Project:							Project name: KMDFDriver_Minifilter -> Create
-// Source File:						Source Files -> Add -> New Item... -> Driver.c
-// Source Code:						Open Driver.c and copy the corresponding source code
-// Library Dependencies:			Open Project Properties -> Linker -> Additional Dependencies -> Add '$(DDK_LIB_PATH)fltMgr.lib;'
-// Build Project:					Set Configuration to Release, x64 -> Build -> Build Solution
-// Locate App:						C:\Users\%USERNAME%\source\repos\KernelRootkit008_Minifilter\x64\Release\ConsoleApp_MinifilterInstallation.exe
-// Locate Driver:					C:\Users\%USERNAME%\source\repos\KernelRootkit008_Minifilter\x64\Release\KMDFDriver_Minifilter.sys
-// Virtual Machine:					Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
-// Move App:						Move ConsoleApp_MinifilterInstallation.exe (Host) to C:\Users\%USERNAME%\Downloads\ConsoleApp_MinifilterInstallation.exe (VM)
-// Move Driver:						Copy KMDFDriver_Minifilter.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_Minifilter.sys (VM)
-// Enable Test Mode:				Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
+// Name:                            KernelRootkit008_Minifilter
+// IDE:                             Open Visual Studio
+// Template:                        Create a new project -> Search for templates (Alt + S) -> Console App -> Next
+// Project:                         Project Name: ConsoleApp_MinifilterInstallation -> Solution Name: KernelRootkit008_Minifilter -> Create
+// Source File:                     In Solution Explorer -> Find ConsoleApp_Application.cpp -> Rename to Application.c
+// Source Code:                     Open Application.c and copy the corresponding source code
+// Build Project:                   Set Configuration to Release, x64 -> Build -> Build Solution
+// Add Project:                     In Solution Explorer -> Right-click the solution (KernelRootkit008_Minifilter) -> Add -> New Project...
+// Template:                        Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
+// Project:                         Project name: KMDFDriver_Minifilter -> Create
+// Source File:                     Source Files -> Add -> New Item... -> Driver.c
+// Source Code:                     Open Driver.c and copy the corresponding source code
+// Library Dependencies:            Open Project Properties -> Linker -> Additional Dependencies -> Add '$(DDK_LIB_PATH)fltMgr.lib;'
+// Build Project:                   Set Configuration to Release, x64 -> Build -> Build Solution
+// Locate App:                      C:\Users\%USERNAME%\source\repos\KernelRootkit008_Minifilter\x64\Release\ConsoleApp_MinifilterInstallation.exe
+// Locate Driver:                   C:\Users\%USERNAME%\source\repos\KernelRootkit008_Minifilter\x64\Release\KMDFDriver_Minifilter.sys
+// Virtual Machine:                 Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
+// Move App:                        Move ConsoleApp_MinifilterInstallation.exe (Host) to C:\Users\%USERNAME%\Downloads\ConsoleApp_MinifilterInstallation.exe (VM)
+// Move Driver:                     Copy KMDFDriver_Minifilter.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_Minifilter.sys (VM)
+// Enable Test Mode:                Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
 // Driver Installation:
-	// Option 1: Manual Registration with sc.exe
-			// 1.1 Register Minifilter:	Open a CMD window as Administrator -> sc.exe create WindowsKernelMinifilter type=filesys start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_Minifilter.sys"
-			// 1.2 Set Required Registry Keys: Run ConsoleApp_MinifilterInstallation.exe as Administrator
-	// or
-	// Option 2: Using OSR Driver Loader
-			// 2.1 Open OSR Driver Loader -> Select KMDFDriver_Minifilter.sys
-			// 2.2 Set type to MiniFilter -> Click Register Service
-			// 2.3 Click Start Service to load the driver
-	// or
-	// Option 3: Auto-Configuration via Driver Entry
-			// 3.1 Uncomment the registry setup code inside DriverEntry in KMDFDriver_Minifilter
-			// 3.2 Compile and rebuild the driver
-			// 3.3 Loading the driver will automatically set the required registry keys
-// Check Registered Driver:			Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelMinifilter
-// Monitor Minifilter Messages:		Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
-// Load:							Run in CMD as Administrator -> fltmc load WindowsKernelMinifilter
-// List Minifilters:				Run in CMD as Administrator -> fltmc
-// Unload:							Run in CMD as Administrator -> fltmc unload WindowsKernelMinifilter
-// Remove:							Run in CMD as Administrator -> sc.exe delete WindowsKernelMinifilter
+    // Option 1: Manual Registration with sc.exe
+            // 1.1 Register Minifilter: Open a CMD window as Administrator -> sc.exe create WindowsKernelMinifilter type=filesys start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_Minifilter.sys"
+            // 1.2 Set Required Registry Keys: Run ConsoleApp_MinifilterInstallation.exe as Administrator
+    // or
+    // Option 2: Using OSR Driver Loader
+            // 2.1 Open OSR Driver Loader -> Select KMDFDriver_Minifilter.sys
+            // 2.2 Set type to MiniFilter -> Click Register Service
+            // 2.3 Click Start Service to load the driver
+    // or
+    // Option 3: Auto-Configuration via Driver Entry
+            // 3.1 Uncomment the registry setup code inside DriverEntry in KMDFDriver_Minifilter
+            // 3.2 Compile and rebuild the driver
+            // 3.3 Loading the driver will automatically set the required registry keys
+// Check Registered Driver:         Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelMinifilter
+// Monitor Minifilter Messages:     Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
+// Load:                            Run in CMD as Administrator -> fltmc load WindowsKernelMinifilter
+// List Minifilters:                Run in CMD as Administrator -> fltmc
+// Unload:                          Run in CMD as Administrator -> fltmc unload WindowsKernelMinifilter
+// Remove:                          Run in CMD as Administrator -> sc.exe delete WindowsKernelMinifilter
 
 
 
@@ -74,13 +74,20 @@
 
 
 
-#define MACRO_INSTANCES_SUBKEY L"Instances"						// Subkey name for minifilter instances
-#define MACRO_DEFAULT_INSTANCE_KEY L"AltitudeAndFlags"			// Key name for storing altitude and flags
-#define MACRO_DEFAULT_INSTANCE_VALUE_NAME L"DefaultInstance"	// Name of the default instance
-#define MACRO_ALTITUDE_VALUE_NAME L"Altitude"					// Registry value for altitude
-#define MACRO_DEFAULT_ALTITUDE L"320000"						// Default altitude for the minifilter
-#define MACRO_FLAGS_VALUE_NAME L"Flags"							// Registry value for flags
-#define MACRO_MY_SERVICE L"WindowsKernelMinifilter"				// Service name
+// Subkey name for minifilter instances
+#define MACRO_INSTANCES_SUBKEY L"Instances"
+// Key name for storing altitude and flags
+#define MACRO_DEFAULT_INSTANCE_KEY L"AltitudeAndFlags"
+// Name of the default instance
+#define MACRO_DEFAULT_INSTANCE_VALUE_NAME L"DefaultInstance"
+// Registry value for altitude
+#define MACRO_ALTITUDE_VALUE_NAME L"Altitude"
+// Default altitude for the minifilter
+#define MACRO_DEFAULT_ALTITUDE L"320000"
+// Registry value for flags
+#define MACRO_FLAGS_VALUE_NAME L"Flags"
+// Service name
+#define MACRO_MY_SERVICE L"WindowsKernelMinifilter"
 
 
 
@@ -90,7 +97,7 @@
 
 
 /**
-	Ensures that the program is running with administrative privileges.
+	@brief		Ensures that the program is running with administrative privileges.
 **/
 void checkAdminPrivileges()
 {
@@ -147,7 +154,7 @@ void checkAdminPrivileges()
 
 
 /**
-	Uses the fltmc command to list currently loaded minifilter drivers. This helps the user verify active minifilters and potential altitude conflicts.
+	@brief		Uses the fltmc command to list currently loaded minifilter drivers. This helps the user verify active minifilters and potential altitude conflicts.
 **/
 void listLoadedMinifilters()
 {
@@ -197,7 +204,7 @@ void listLoadedMinifilters()
 
 
 /**
-	Main function that configures the registry settings for a Windows minifilter driver.
+	@brief		Main function that configures the registry settings for a Windows minifilter driver.
 **/
 int main()
 {
@@ -343,3 +350,8 @@ int main()
 	wprintf(L"Everything is set up for service %s\n", MACRO_MY_SERVICE);
 	return 0;
 }
+
+
+
+// --------------------------------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------------------------------

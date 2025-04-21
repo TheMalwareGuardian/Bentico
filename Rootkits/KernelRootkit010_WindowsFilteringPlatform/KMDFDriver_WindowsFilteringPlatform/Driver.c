@@ -3,27 +3,27 @@
 
 
 
-// Name:							KernelRootkit010_WindowsFilteringPlatform
-// IDE:								Open Visual Studio
-// Template:						Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
-// Project:							Project Name: KMDFDriver_WindowsFilteringPlatform -> Solution Name: KernelRootkit010_WindowsFilteringPlatform -> Create
-// Source File:						Source Files -> Add -> New Item... -> Driver.c
-// Source Code:						Open Driver.c and copy the corresponding source code
-// Library Dependencies:			Open Project Properties -> Linker -> Additional Dependencies -> Add '$(DDK_LIB_PATH)fwpkclnt.lib;'
-// Enable NDIS Support:				Go to Project Properties -> Configuration Properties -> C/C++ -> Preprocessor -> Add 'NDIS_SUPPORT_NDIS6;' to Preprocessor Definitions.
-// Build Project:					Set Configuration to Release, x64 -> Build -> Build Solution
-// Locate Driver:					C:\Users\%USERNAME%\source\repos\KernelRootkit010_WindowsFilteringPlatform\x64\Release\KMDFDriver_WindowsFilteringPlatform.sys
-// Virtual Machine:					Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
-// Move Driver:						Copy KMDFDriver_WindowsFilteringPlatform.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_WindowsFilteringPlatform.sys (VM)
-// Enable Test Mode:				Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
-// Driver Installation:				Open a CMD window as Administrator -> sc.exe create WindowsKernelWindowsFilteringPlatform type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_WindowsFilteringPlatform.sys"
-// Registered Driver:				Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelWindowsFilteringPlatform
-// Service Status:					Run in CMD as Administrator -> sc.exe query WindowsKernelWindowsFilteringPlatform -> driverquery.exe
-// Registry Entry:					Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelWindowsFilteringPlatform
-// Monitor Messages:				Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
-// Start Routine:					Run in CMD as Administrator -> sc.exe start WindowsKernelWindowsFilteringPlatform
-// Clean:							Run in CMD as Administrator -> sc.exe stop WindowsKernelWindowsFilteringPlatform
-// Remove:							Run in CMD as Administrator -> sc.exe delete WindowsKernelWindowsFilteringPlatform
+// Name:                            KernelRootkit010_WindowsFilteringPlatform
+// IDE:                             Open Visual Studio
+// Template:                        Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
+// Project:                         Project Name: KMDFDriver_WindowsFilteringPlatform -> Solution Name: KernelRootkit010_WindowsFilteringPlatform -> Create
+// Source File:                     Source Files -> Add -> New Item... -> Driver.c
+// Source Code:                     Open Driver.c and copy the corresponding source code
+// Library Dependencies:            Open Project Properties -> Linker -> Additional Dependencies -> Add '$(DDK_LIB_PATH)fwpkclnt.lib;'
+// Enable NDIS Support:             Go to Project Properties -> Configuration Properties -> C/C++ -> Preprocessor -> Add 'NDIS_SUPPORT_NDIS6;' to Preprocessor Definitions.
+// Build Project:                   Set Configuration to Release, x64 -> Build -> Build Solution
+// Locate Driver:                   C:\Users\%USERNAME%\source\repos\KernelRootkit010_WindowsFilteringPlatform\x64\Release\KMDFDriver_WindowsFilteringPlatform.sys
+// Virtual Machine:                 Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
+// Move Driver:                     Copy KMDFDriver_WindowsFilteringPlatform.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_WindowsFilteringPlatform.sys (VM)
+// Enable Test Mode:                Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
+// Driver Installation:             Open a CMD window as Administrator -> sc.exe create WindowsKernelWindowsFilteringPlatform type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_WindowsFilteringPlatform.sys"
+// Registered Driver:               Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelWindowsFilteringPlatform
+// Service Status:                  Run in CMD as Administrator -> sc.exe query WindowsKernelWindowsFilteringPlatform -> driverquery.exe
+// Registry Entry:                  Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelWindowsFilteringPlatform
+// Monitor Messages:                Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
+// Start Routine:                   Run in CMD as Administrator -> sc.exe start WindowsKernelWindowsFilteringPlatform
+// Clean:                           Run in CMD as Administrator -> sc.exe stop WindowsKernelWindowsFilteringPlatform
+// Remove:                          Run in CMD as Administrator -> sc.exe delete WindowsKernelWindowsFilteringPlatform
 
 
 
@@ -80,10 +80,14 @@ DEFINE_GUID(WFP_SAMPLE_SUB_LAYER_GUID, 0x906f1a88, 0x0efa, 0x4548, 0x94, 0xb3, 0
 
 
 
-PDEVICE_OBJECT Global_DeviceObject = NULL;			// Pointer to the device object created by the driver.
-HANDLE Global_EngineHandle = NULL;					// Handle to the Windows Filtering Platform (WFP) engine session.
-UINT32 Global_RegCalloutId = 0, Global_AddCalloutId;		// IDs for the registered callout and added callout.
-UINT64 Global_FilterId = 0;						// ID for the filter rule added to WFP.
+// Pointer to the device object created by the driver.
+PDEVICE_OBJECT Global_DeviceObject = NULL;
+// Handle to the Windows Filtering Platform (WFP) engine session.
+HANDLE Global_EngineHandle = NULL;
+// IDs for the registered callout and added callout.
+UINT32 Global_RegCalloutId = 0, Global_AddCalloutId;
+// ID for the filter rule added to WFP.
+UINT64 Global_FilterId = 0;
 
 
 
@@ -93,9 +97,7 @@ UINT64 Global_FilterId = 0;						// ID for the filter rule added to WFP.
 
 /**
 	@brief		Uninitializes the Windows Filtering Platform (WFP).
-
-				This function removes the registered filter, sublayer, and callout and closes the WFP engine handle to properly clean up resources.
-
+	@details	This function removes the registered filter, sublayer, and callout and closes the WFP engine handle to properly clean up resources.
 **/
 VOID
 WindowsFilteringPlatformClean()
@@ -176,12 +178,11 @@ WindowsFilteringPlatformClean()
 
 /**
 	@brief		Unloads a Windows kernel-mode driver.
+	@details	This function is called when the driver is being unloaded from memory. It is responsible for cleaning up resources and performing necessary cleanup tasks before the driver is removed from the system. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
 
-				This function is called when the driver is being unloaded from memory. It is responsible for cleaning up resources and performing necessary cleanup tasks before the driver is removed from the system. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
 
-
-				PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver.
+	@see		PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver.
 **/
 VOID
 DriverUnload(
@@ -228,20 +229,17 @@ DriverUnload(
 
 /**
 	@brief		Callback function triggered when a callout notification event occurs.
-
-				This function is invoked by the Windows Filtering Platform (WFP) when a filter-related event happens, such as filter addition, deletion, or modification.
-
-
-				FWPS_CALLOUT_NOTIFY_TYPE	https://learn.microsoft.com/en-us/previous-versions/aa364335(v=vs.85)
-	@param		type						Type of the notification event.
+	@details	This function is invoked by the Windows Filtering Platform (WFP) when a filter-related event happens, such as filter addition, deletion, or modification.
 
 
-				GUID						https://learn.microsoft.com/en-us/windows-hardware/drivers/network/filtering-layer
-	@param		filterkey					Pointer to the GUID of the filter that triggered the event.
+	@see		FWPS_CALLOUT_NOTIFY_TYPE	https://learn.microsoft.com/en-us/previous-versions/aa364335(v=vs.85)
+	@param[in]	type						Type of the notification event.
+
+	@see		GUID						https://learn.microsoft.com/en-us/windows-hardware/drivers/network/filtering-layer
+	@param[in]	filterkey					Pointer to the GUID of the filter that triggered the event.
 	
-	
-				FWPS_FILTER					https://learn.microsoft.com/en-us/windows/win32/api/fwpstypes/ns-fwpstypes-fwps_filter0
-	@param		filter						Pointer to the filter structure.
+	@see		FWPS_FILTER					https://learn.microsoft.com/en-us/windows/win32/api/fwpstypes/ns-fwpstypes-fwps_filter0
+	@param[in]	filter						Pointer to the filter structure.
 
 
 	@return		Always returns STATUS_SUCCESS.
@@ -269,20 +267,17 @@ NotifyCallback(
 
 /**
 	@brief		Callback function triggered when a flow deletion event occurs.
-
-				This function is invoked by the Windows Filtering Platform (WFP) when a flow is being deleted. It allows cleanup of any state associated with the flow.
-
-
-				UINT16					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#UINT16
-	@param		layerid					The layer ID where the flow was created.
+	@details	This function is invoked by the Windows Filtering Platform (WFP) when a flow is being deleted. It allows cleanup of any state associated with the flow.
 
 
-				UINT32					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#UINT32
-	@param		calloutid				The callout ID that is associated with this flow deletion.
+	@see		UINT16					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#UINT16
+	@param[in]	layerid					The layer ID where the flow was created.
 
+	@see		UINT32					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#UINT32
+	@param[in]	calloutid				The callout ID that is associated with this flow deletion.
 
-				UINT64					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#UINT64
-	@param		flowcontext				Context information for the flow being deleted.
+	@see		UINT64					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#UINT64
+	@param[in]	flowcontext				Context information for the flow being deleted.
 **/
 VOID FlowDeleteCallback(
 	_In_		UINT16					layerid,
@@ -301,48 +296,42 @@ VOID FlowDeleteCallback(
 
 /**
 	@brief		Callback function for filtering network connections.
-
-				This function is invoked when a network connection attempt occurs. It checks the local and remote IP addresses of the connection and logs the details. If the remote IP matches the targetip, the connection is blocked.
-
-
-				FWPS_INCOMING_VALUES			https://learn.microsoft.com/en-us/windows/win32/api/fwpstypes/ns-fwpstypes-fwps_incoming_values0
-	@param		Values							Pointer to incoming connection metadata (IP addresses, ports, etc.).
+	@details	This function is invoked when a network connection attempt occurs. It checks the local and remote IP addresses of the connection and logs the details. If the remote IP matches the targetip, the connection is blocked.
 
 
-				FWPS_INCOMING_METADATA_VALUES0	https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/fwpsk/ns-fwpsk-fwps_incoming_metadata_values0_
-	@param		MetaData						Contains additional metadata (process ID, executable path, etc.).
+	@see		FWPS_INCOMING_VALUES			https://learn.microsoft.com/en-us/windows/win32/api/fwpstypes/ns-fwpstypes-fwps_incoming_values0
+	@param[in]	Values							Pointer to incoming connection metadata (IP addresses, ports, etc.).
 
+	@see		FWPS_INCOMING_METADATA_VALUES0	https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/fwpsk/ns-fwpsk-fwps_incoming_metadata_values0_
+	@param[in]	MetaData						Contains additional metadata (process ID, executable path, etc.).
 
-				PVOID							https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#PVOID
-	@param		layerdata						Pointer to layer-specific data (not used in this implementation).
+	@see		PVOID							https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#PVOID
+	@param[in]	layerdata						Pointer to layer-specific data (not used in this implementation).
 
-
+	@see		VOID							https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#VOID
 	@param		context							User-defined context (not used in this implementation).
 
+	@see		FWPS_FILTER						https://learn.microsoft.com/en-us/windows/win32/api/fwpstypes/ns-fwpstypes-fwps_filter0
+	@param[in]	filter							Pointer to the filter that triggered this callback.
 
-				FWPS_FILTER						https://learn.microsoft.com/en-us/windows/win32/api/fwpstypes/ns-fwpstypes-fwps_filter0
-	@param		filter							Pointer to the filter that triggered this callback.
+	@see		UINT64							https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#UINT64
+	@param[in]	flowcontext						Flow context associated with the connection (not used here).
 
-
-				UINT64							https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#UINT64
-	@param		flowcontext						Flow context associated with the connection (not used here).
-
-
-				FWPS_CLASSIFY_OUT				https://learn.microsoft.com/en-us/windows/win32/api/fwpstypes/ns-fwpstypes-fwps_classify_out0
-	@param		classifyout						Output structure to determine whether the connection is allowed or blocked.
+	@see		FWPS_CLASSIFY_OUT				https://learn.microsoft.com/en-us/windows/win32/api/fwpstypes/ns-fwpstypes-fwps_classify_out0
+	@param[in]	classifyout						Output structure to determine whether the connection is allowed or blocked.
 
 
 	@return		None
 **/
 VOID
 FilterCallback(
-	const		FWPS_INCOMING_VALUES*			Values,
-	const		FWPS_INCOMING_METADATA_VALUES0	MetaData,
-	const		PVOID							layerdata,
-	const		void*							context,
-	const		FWPS_FILTER*					filter,
-				UINT64							flowcontext,
-				FWPS_CLASSIFY_OUT*				classifyout
+	_In_		const FWPS_INCOMING_VALUES*				Values,
+	_In_		const FWPS_INCOMING_METADATA_VALUES0	MetaData,
+	_In_		const PVOID								layerdata,
+	_In_		const void*								context,
+	_In_		const FWPS_FILTER*						filter,
+	_In_		UINT64									flowcontext,
+	_Out_		FWPS_CLASSIFY_OUT*						classifyout
 )
 {
 	// ---------------------------------------------------------------------------------------------------------------------
@@ -355,9 +344,12 @@ FilterCallback(
 	// ---------------------------------------------------------------------------------------------------------------------
 	// Define IP Variables
 
-	ULONG LocalIp;					// Local machine's IP
-	ULONG RemoteIp;					// Remote machine's IP
-	ULONG targetip = 0x0EB8FA8E;	// Target IP to block (142.250.184.14 0E B8 FA 8E - 142 -> 0x8E 250 -> 0xFA 184 -> 0xB8 14 -> 0x0E)
+	// Local machine's IP
+	ULONG LocalIp;
+	// Remote machine's IP
+	ULONG RemoteIp;
+	// Target IP to block (142.250.184.14 0E B8 FA 8E - 142 -> 0x8E 250 -> 0xFA 184 -> 0xB8 14 -> 0x0E)
+	ULONG targetip = 0x0EB8FA8E;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------
@@ -419,8 +411,7 @@ end:
 
 /**
 	@brief		Opens the Windows Filtering Platform (WFP) engine.
-
-				This function establishes a connection with the WFP engine, allowing further configuration of callouts, sublayers, and filters.
+	@details	This function establishes a connection with the WFP engine, allowing further configuration of callouts, sublayers, and filters.
 
 
 	@return		NTSTATUS code indicating success or failure.
@@ -454,8 +445,7 @@ WfpOpenEngine()
 
 /**
 	@brief		Registers a callout in the Windows Filtering Platform.
-
-				This function registers a callout for monitoring and controlling network traffic at a specific layer.
+	@details	This function registers a callout for monitoring and controlling network traffic at a specific layer.
 
 
 	@return		NTSTATUS code indicating success or failure.
@@ -502,8 +492,7 @@ WfpRegisterCallout()
 
 /**
 	@brief		Adds a callout to the Windows Filtering Platform engine.
-
-				This function creates a new callout in the filtering engine, allowing it to interact with network traffic at a specified layer.
+	@details	This function creates a new callout in the filtering engine, allowing it to interact with network traffic at a specified layer.
 
 
 	@return		NTSTATUS code indicating success or failure.
@@ -548,8 +537,7 @@ WfpAddCallout()
 
 /**
 	@brief		Adds a sublayer to the Windows Filtering Platform.
-
-				This function defines a custom sublayer that will be used to group filtering rules for easier management.
+	@details	This function defines a custom sublayer that will be used to group filtering rules for easier management.
 
 
 	@return		NTSTATUS code indicating success or failure.
@@ -593,8 +581,7 @@ WfpAddSublayer()
 
 /**
 	@brief		Adds a filter to the Windows Filtering Platform.
-
-				This function creates a filter that applies to specific network traffic based on defined conditions.
+	@details	This function creates a filter that applies to specific network traffic based on defined conditions.
 
 
 	@return		NTSTATUS code indicating success or failure.
@@ -699,16 +686,14 @@ end:
 
 /**
 	@brief		Entry point for a Windows kernel-mode driver.
-	
-				This function is called when the driver is loaded into memory. It initializes the driver and performs necessary setup tasks. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers
+	@details	This function is called when the driver is loaded into memory. It initializes the driver and performs necessary setup tasks. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers
 
 
-				PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
+	@see		PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
 
-
-				PUNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
-	@param		pRegistryPath			Pointer to a UNICODE_STRING structure, containing the driver's registry path as a Unicode string, indicating the driver's location in the Windows registry.
+	@see		PUNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
+	@param[in]	pRegistryPath			Pointer to a UNICODE_STRING structure, containing the driver's registry path as a Unicode string, indicating the driver's location in the Windows registry.
 
 
 	@return		A NTSTATUS value indicating success or an error code if initialization fails.

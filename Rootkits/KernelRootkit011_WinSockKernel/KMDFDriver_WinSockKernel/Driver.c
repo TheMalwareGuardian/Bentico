@@ -3,28 +3,28 @@
 
 
 
-// Name:							KernelRootkit011_WinSockKernel
-// IDE:								Open Visual Studio
-// Template:						Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
-// Project:							Project Name: KMDFDriver_WinSockKernel -> Solution Name: KernelRootkit011_WinSockKernel -> Create
-// Source File:						Source Files -> Add -> New Item... -> Driver.c
-// Source Code:						Open Driver.c and copy the corresponding source code
-// Library Dependencies:			Open Project Properties -> Linker -> Additional Dependencies -> Add '$(DDK_LIB_PATH)Netio.lib;'
+// Name:                            KernelRootkit011_WinSockKernel
+// IDE:                             Open Visual Studio
+// Template:                        Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
+// Project:                         Project Name: KMDFDriver_WinSockKernel -> Solution Name: KernelRootkit011_WinSockKernel -> Create
+// Source File:                     Source Files -> Add -> New Item... -> Driver.c
+// Source Code:                     Open Driver.c and copy the corresponding source code
+// Library Dependencies:            Open Project Properties -> Linker -> Additional Dependencies -> Add '$(DDK_LIB_PATH)Netio.lib;'
 // LibWSK:							
-// Build Project:					Set Configuration to Release, x64 -> Build -> Build Solution
-// Locate App:						C:\Users\%USERNAME%\source\repos\KernelRootkit011_WinSockKernel\x64\Release\ConsoleApp_DKOM.exe
-// Locate Driver:					C:\Users\%USERNAME%\source\repos\KernelRootkit011_WinSockKernel\x64\Release\KMDFDriver_WinSockKernel.sys
-// Virtual Machine:					Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
-// Move Driver:						Copy KMDFDriver_WinSockKernel.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_WinSockKernel.sys (VM)
-// Enable Test Mode:				Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
-// Driver Installation:				Open a CMD window as Administrator -> sc.exe create WindowsKernelWinSockKernel type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_WinSockKernel.sys"
-// Registered Driver:				Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelWinSockKernel
-// Service Status:					Run in CMD as Administrator -> sc.exe query WindowsKernelWinSockKernel -> driverquery.exe
-// Registry Entry:					Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelWinSockKernel
-// Monitor Messages:				Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
-// Start Routine:					Run in CMD as Administrator -> sc.exe start WindowsKernelWinSockKernel
-// Clean:							Run in CMD as Administrator -> sc.exe stop WindowsKernelWinSockKernel
-// Remove:							Run in CMD as Administrator -> sc.exe delete WindowsKernelWinSockKernel
+// Build Project:                   Set Configuration to Release, x64 -> Build -> Build Solution
+// Locate App:                      C:\Users\%USERNAME%\source\repos\KernelRootkit011_WinSockKernel\x64\Release\ConsoleApp_DKOM.exe
+// Locate Driver:                   C:\Users\%USERNAME%\source\repos\KernelRootkit011_WinSockKernel\x64\Release\KMDFDriver_WinSockKernel.sys
+// Virtual Machine:                 Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
+// Move Driver:                     Copy KMDFDriver_WinSockKernel.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_WinSockKernel.sys (VM)
+// Enable Test Mode:                Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
+// Driver Installation:             Open a CMD window as Administrator -> sc.exe create WindowsKernelWinSockKernel type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_WinSockKernel.sys"
+// Registered Driver:               Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelWinSockKernel
+// Service Status:                  Run in CMD as Administrator -> sc.exe query WindowsKernelWinSockKernel -> driverquery.exe
+// Registry Entry:                  Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelWinSockKernel
+// Monitor Messages:                Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
+// Start Routine:                   Run in CMD as Administrator -> sc.exe start WindowsKernelWinSockKernel
+// Clean:                           Run in CMD as Administrator -> sc.exe stop WindowsKernelWinSockKernel
+// Remove:                          Run in CMD as Administrator -> sc.exe delete WindowsKernelWinSockKernel
 
 
 
@@ -66,8 +66,7 @@ PWSK_SOCKET g_Socket = NULL;
 
 /**
 	@brief		Initializes the Windows Socket Kernel (WSK) environment.
-
-				This function initializes the WSK subsystem, which is required for network communication in a Windows kernel-mode driver.
+	@details	This function initializes the WSK subsystem, which is required for network communication in a Windows kernel-mode driver.
 **/
 NTSTATUS
 WinSockKernelInitialize()
@@ -112,8 +111,14 @@ WinSockKernelInitialize()
 
 /**
 	@brief		Converts an IPv4 string to a SOCKADDR_IN structure.
+	@details	This function takes a string representation of an IPv4 address and converts it into a SOCKADDR_IN structure. It sets the address family to AF_INET and assigns a default port (port 80).
 
-				This function takes a string representation of an IPv4 address and converts it into a SOCKADDR_IN structure. It sets the address family to AF_INET and assigns a default port (port 80).
+
+	@see		CHAR			https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#CHAR
+	@param[in]	IpString		A null-terminated string representing the IPv4 address (e.g., "192.168.1.1").
+
+	@see		SOCKADDR_IN		https://learn.microsoft.com/en-us/windows/win32/api/ws2def/ns-ws2def-sockaddr_in
+	@param[out]	SockAddr		A pointer to a SOCKADDR_IN structure that will be filled with the corresponding binary IP address and default port.
 **/
 VOID
 ConvertIPStringToSockaddr(
@@ -158,8 +163,7 @@ ConvertIPStringToSockaddr(
 
 /**
 	@brief		Sends an HTTP request to a remote server.
-
-				This function establishes a TCP connection to a remote server, sends an HTTP GET request, and retrieves the server's response.
+	@details	This function establishes a TCP connection to a remote server, sends an HTTP GET request, and retrieves the server's response.
 **/
 NTSTATUS
 SendHttpRequest()
@@ -250,12 +254,11 @@ SendHttpRequest()
 
 /**
 	@brief		Unloads a Windows kernel-mode driver.
+	@details	This function is called when the driver is being unloaded from memory. It is responsible for cleaning up resources and performing necessary cleanup tasks before the driver is removed from the system. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
 
-				This function is called when the driver is being unloaded from memory. It is responsible for cleaning up resources and performing necessary cleanup tasks before the driver is removed from the system. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
 
-
-				PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver.
+	@see		PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver.
 **/
 VOID
 DriverUnload(
@@ -312,15 +315,14 @@ DriverUnload(
 
 /**
 	@brief		Entry point for a Windows kernel-mode driver.
-	
-				This function is called when the driver is loaded into memory. It initializes the driver and performs necessary setup tasks. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers
+	@details	This function is called when the driver is loaded into memory. It initializes the driver and performs necessary setup tasks. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers
 
 
-				PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
+	@see		PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
 
-				PUNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
-	@param		pRegistryPath			Pointer to a UNICODE_STRING structure, containing the driver's registry path as a Unicode string, indicating the driver's location in the Windows registry.
+	@see		PUNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
+	@param[in]	pRegistryPath			Pointer to a UNICODE_STRING structure, containing the driver's registry path as a Unicode string, indicating the driver's location in the Windows registry.
 
 
 	@return		A NTSTATUS value indicating success or an error code if initialization fails.

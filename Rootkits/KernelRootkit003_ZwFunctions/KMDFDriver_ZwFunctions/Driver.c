@@ -3,25 +3,25 @@
 
 
 
-// Name:							KernelRootkit003_ZwFunctions
-// IDE:								Open Visual Studio
-// Template:						Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
-// Project:							Project Name: KMDFDriver_ZwFunctions -> Solution Name: KernelRootkit003_ZwFunctions -> Create
-// Source File:						Source Files -> Add -> New Item... -> Driver.c
-// Source Code:						Open Driver.c and copy the corresponding source code
-// Build Project:					Set Configuration to Release, x64 -> Build -> Build Solution
-// Locate Driver:					C:\Users\%USERNAME%\source\repos\KernelRootkit003_ZwFunctions\x64\Release\KMDFDriver_ZwFunctions.sys
-// Virtual Machine:					Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
-// Move Driver:						Copy KMDFDriver_ZwFunctions.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_ZwFunctions.sys (VM)
-// Enable Test Mode:				Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
-// Driver Installation:				Open a CMD window as Administrator -> sc.exe create WindowsKernelZwFunctions type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_ZwFunctions.sys"
-// Registered Driver:				Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelZwFunctions
-// Service Status:					Run in CMD as Administrator -> sc.exe query WindowsKernelZwFunctions -> driverquery.exe
-// Registry Entry:					Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelZwFunctions
-// Monitor Messages:				Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
-// Start Routine:					Run in CMD as Administrator -> sc.exe start WindowsKernelZwFunctions
-// Clean:							Run in CMD as Administrator -> sc.exe stop WindowsKernelZwFunctions
-// Remove:							Run in CMD as Administrator -> sc.exe delete WindowsKernelZwFunctions
+// Name:                            KernelRootkit003_ZwFunctions
+// IDE:                             Open Visual Studio
+// Template:                        Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
+// Project:                         Project Name: KMDFDriver_ZwFunctions -> Solution Name: KernelRootkit003_ZwFunctions -> Create
+// Source File:                     Source Files -> Add -> New Item... -> Driver.c
+// Source Code:                     Open Driver.c and copy the corresponding source code
+// Build Project:                   Set Configuration to Release, x64 -> Build -> Build Solution
+// Locate Driver:                   C:\Users\%USERNAME%\source\repos\KernelRootkit003_ZwFunctions\x64\Release\KMDFDriver_ZwFunctions.sys
+// Virtual Machine:                 Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
+// Move Driver:                     Copy KMDFDriver_ZwFunctions.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_ZwFunctions.sys (VM)
+// Enable Test Mode:                Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
+// Driver Installation:             Open a CMD window as Administrator -> sc.exe create WindowsKernelZwFunctions type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_ZwFunctions.sys"
+// Registered Driver:               Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelZwFunctions
+// Service Status:                  Run in CMD as Administrator -> sc.exe query WindowsKernelZwFunctions -> driverquery.exe
+// Registry Entry:                  Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelZwFunctions
+// Monitor Messages:                Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
+// Start Routine:                   Run in CMD as Administrator -> sc.exe start WindowsKernelZwFunctions
+// Clean:                           Run in CMD as Administrator -> sc.exe stop WindowsKernelZwFunctions
+// Remove:                          Run in CMD as Administrator -> sc.exe delete WindowsKernelZwFunctions
 
 
 
@@ -56,16 +56,14 @@ UNICODE_STRING Global_FilePath = RTL_CONSTANT_STRING(L"\\??\\C:\\Hello.txt");
 
 /**
 	@brief		Retrieves and formats the OS version information.
-
-				This function collects only the operating system version information and formats it into a provided buffer for further use or logging.
-
-
-				CHAR					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#CHAR
-	@param		buffer					Pointer to a buffer where the formatted OS version information will be stored.
+	@details	This function collects only the operating system version information and formats it into a provided buffer for further use or logging.
 
 
-				SIZE_T					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#SIZE_T
-	@param		bufferSize				Size of the provided buffer in bytes to ensure no overflow occurs.
+	@see		CHAR					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#CHAR
+	@param[out]	buffer					Pointer to a buffer where the formatted OS version information will be stored.
+
+	@see		SIZE_T					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#SIZE_T
+	@param[in]	bufferSize				Size of the provided buffer in bytes to ensure no overflow occurs.
 **/
 VOID
 LocalFunction_GetOSVersionInfo(
@@ -125,12 +123,11 @@ LocalFunction_GetOSVersionInfo(
 
 /**
 	@brief		Create a file.
+	@details	This function creates a file at the specified path. If the file already exists, it will be overwritten.
 
-				This function creates a file at the specified path. If the file already exists, it will be overwritten.
 
-
-				UNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
-	@param		filePath				Pointer to a UNICODE_STRING structure representing the file path.
+	@see		UNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
+	@param[in]	filePath				Pointer to a UNICODE_STRING structure representing the file path.
 
 
 	@return		NTSTATUS				Status of the file creation operation.
@@ -142,8 +139,12 @@ LocalFunction_CreateFile(
 {
 	// ---------------------------------------------------------------------------------------------------------------------
 	// Variables
-	IO_STATUS_BLOCK ioStatusBlock;		// A driver sets an IRP's I/O status block to indicate the final status of an I/O request, before calling IoCompleteRequest for the IRP. https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_io_status_block
-	OBJECT_ATTRIBUTES objAttr;			// The OBJECT_ATTRIBUTES structure specifies attributes that can be applied to objects or object handles by routines that create objects and/or return handles to objects. https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_object_attributes
+
+	// A driver sets an IRP's I/O status block to indicate the final status of an I/O request, before calling IoCompleteRequest for the IRP. https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_io_status_block
+	IO_STATUS_BLOCK ioStatusBlock;
+	// The OBJECT_ATTRIBUTES structure specifies attributes that can be applied to objects or object handles by routines that create objects and/or return handles to objects. https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_object_attributes
+	OBJECT_ATTRIBUTES objAttr;
+
 	HANDLE fileHandle;
 	NTSTATUS status;
 
@@ -205,20 +206,17 @@ LocalFunction_CreateFile(
 
 /**
 	@brief		Append data to a file.
-
-				This function appends data to the specified file. If the file does not exist, it will fail.
-
-
-				UNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
-	@param		filePath				Pointer to a UNICODE_STRING structure representing the file path.
+	@details	This function appends data to the specified file. If the file does not exist, it will fail.
 
 
-				VOID*					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#VOID
-	@param		data					Pointer to the data buffer to append.
+	@see		UNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
+	@param[in]	filePath				Pointer to a UNICODE_STRING structure representing the file path.
 
+	@see		VOID*					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#VOID
+	@param[in]	data					Pointer to the data buffer to append.
 
-				SIZE_T					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#SIZE_T
-	@param		dataSize				Size of the data buffer in bytes.
+	@see		SIZE_T					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#SIZE_T
+	@param[in]	dataSize				Size of the data buffer in bytes.
 
 
 	@return		NTSTATUS				Status of the file append operation.
@@ -232,8 +230,12 @@ LocalFunction_AppendToFile(
 {
 	// ---------------------------------------------------------------------------------------------------------------------
 	// Variables
-	IO_STATUS_BLOCK ioStatusBlock;		// A driver sets an IRP's I/O status block to indicate the final status of an I/O request, before calling IoCompleteRequest for the IRP. https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_io_status_block
-	OBJECT_ATTRIBUTES objAttr;			// The OBJECT_ATTRIBUTES structure specifies attributes that can be applied to objects or object handles by routines that create objects and/or return handles to objects. https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_object_attributes
+
+	// A driver sets an IRP's I/O status block to indicate the final status of an I/O request, before calling IoCompleteRequest for the IRP. https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_io_status_block
+	IO_STATUS_BLOCK ioStatusBlock;
+	// The OBJECT_ATTRIBUTES structure specifies attributes that can be applied to objects or object handles by routines that create objects and/or return handles to objects. https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_object_attributes
+	OBJECT_ATTRIBUTES objAttr;
+
 	HANDLE fileHandle;
 	NTSTATUS status;
 
@@ -312,8 +314,8 @@ LocalFunction_AppendToFile(
 	@brief		Delete a file.
 
 
-				UNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
-	@param		filePath				Pointer to a UNICODE_STRING structure representing the file path.
+	@see		UNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
+	@param[in]	filePath				Pointer to a UNICODE_STRING structure representing the file path.
 
 
 	@return		NTSTATUS				Status of the file deletion operation.
@@ -325,7 +327,9 @@ LocalFunction_DeleteFile(
 {
 	// ---------------------------------------------------------------------------------------------------------------------
 	// Variables
-	OBJECT_ATTRIBUTES objAttr;			// The OBJECT_ATTRIBUTES structure specifies attributes that can be applied to objects or object handles by routines that create objects and/or return handles to objects. https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_object_attributes
+
+	// The OBJECT_ATTRIBUTES structure specifies attributes that can be applied to objects or object handles by routines that create objects and/or return handles to objects. https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_object_attributes
+	OBJECT_ATTRIBUTES objAttr;
 	
 	NTSTATUS status;
 
@@ -378,12 +382,11 @@ LocalFunction_DeleteFile(
 
 /**
 	@brief		Unloads a Windows kernel-mode driver.
+	@details	This function is called when the driver is being unloaded from memory. It is responsible for cleaning up resources and performing necessary cleanup tasks before the driver is removed from the system. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
 
-				This function is called when the driver is being unloaded from memory. It is responsible for cleaning up resources and performing necessary cleanup tasks before the driver is removed from the system. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
 
-
-				PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver.
+	@see		PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver.
 **/
 VOID
 DriverUnload(
@@ -427,16 +430,14 @@ DriverUnload(
 
 /**
 	@brief		Entry point for a Windows kernel-mode driver.
-	
-				This function is called when the driver is loaded into memory. It initializes the driver and performs necessary setup tasks. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers
+	@details	This function is called when the driver is loaded into memory. It initializes the driver and performs necessary setup tasks. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers
 
 
-				PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
+	@see		PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
 
-
-				PUNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
-	@param		pRegistryPath			Pointer to a UNICODE_STRING structure, containing the driver's registry path as a Unicode string, indicating the driver's location in the Windows registry.
+	@see		PUNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
+	@param[in]	pRegistryPath			Pointer to a UNICODE_STRING structure, containing the driver's registry path as a Unicode string, indicating the driver's location in the Windows registry.
 
 
 	@return		A NTSTATUS value indicating success or an error code if initialization fails.
@@ -447,7 +448,7 @@ DriverEntry(
 	_In_		PUNICODE_STRING			pRegistryPath
 )
 {
-		// ---------------------------------------------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------
 	// Preventing compiler warnings for unused parameter. We're not using the registry path, so we need to mark it as unreferenced.
 	UNREFERENCED_PARAMETER(pRegistryPath);
 

@@ -3,25 +3,25 @@
 
 
 
-// Name:							KernelRootkit002_Threading
-// IDE:								Open Visual Studio
-// Template:						Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
-// Project:							Project Name: KMDFDriver_Threading -> Solution Name: KernelRootkit002_Threading -> Create
-// Source File:						Source Files -> Add -> New Item... -> Driver.c
-// Source Code:						Open Driver.c and copy the corresponding source code
-// Build Project:					Set Configuration to Release, x64 -> Build -> Build Solution
-// Locate Driver:					C:\Users\%USERNAME%\source\repos\KernelRootkit002_Threading\x64\Release\KMDFDriver_Threading.sys
-// Virtual Machine:					Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
-// Move Driver:						Copy KMDFDriver_Threading.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_Threading.sys (VM)
-// Enable Test Mode:				Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
-// Driver Installation:				Open a CMD window as Administrator -> sc.exe create WindowsKernelThreading type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_Threading.sys"
-// Registered Driver:				Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelThreading
-// Service Status:					Run in CMD as Administrator -> sc.exe query WindowsKernelThreading -> driverquery.exe
-// Registry Entry:					Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelThreading
-// Monitor Messages:				Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
-// Start Routine:					Run in CMD as Administrator -> sc.exe start WindowsKernelThreading
-// Clean:							Run in CMD as Administrator -> sc.exe stop WindowsKernelThreading
-// Remove:							Run in CMD as Administrator -> sc.exe delete WindowsKernelThreading
+// Name:                            KernelRootkit002_Threading
+// IDE:                             Open Visual Studio
+// Template:                        Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
+// Project:                         Project Name: KMDFDriver_Threading -> Solution Name: KernelRootkit002_Threading -> Create
+// Source File:                     Source Files -> Add -> New Item... -> Driver.c
+// Source Code:                     Open Driver.c and copy the corresponding source code
+// Build Project:                   Set Configuration to Release, x64 -> Build -> Build Solution
+// Locate Driver:                   C:\Users\%USERNAME%\source\repos\KernelRootkit002_Threading\x64\Release\KMDFDriver_Threading.sys
+// Virtual Machine:                 Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
+// Move Driver:                     Copy KMDFDriver_Threading.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_Threading.sys (VM)
+// Enable Test Mode:                Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
+// Driver Installation:             Open a CMD window as Administrator -> sc.exe create WindowsKernelThreading type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_Threading.sys"
+// Registered Driver:               Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelThreading
+// Service Status:                  Run in CMD as Administrator -> sc.exe query WindowsKernelThreading -> driverquery.exe
+// Registry Entry:                  Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelThreading
+// Monitor Messages:                Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
+// Start Routine:                   Run in CMD as Administrator -> sc.exe start WindowsKernelThreading
+// Clean:                           Run in CMD as Administrator -> sc.exe stop WindowsKernelThreading
+// Remove:                          Run in CMD as Administrator -> sc.exe delete WindowsKernelThreading
 
 
 
@@ -52,22 +52,19 @@
 
 /**
 	@brief		Global handle for the system thread.
-
-				This variable stores the handle to the system thread created by the driver. It is used for managing the thread lifecycle, including waiting for its termination and closing the handle during cleanup.
+	@details	This variable stores the handle to the system thread created by the driver. It is used for managing the thread lifecycle, including waiting for its termination and closing the handle during cleanup.
 **/
 HANDLE Global_ThreadHandle = NULL;
 
 /**
 	@brief		Signal to stop the thread.
-
-				This global boolean variable acts as a flag to gracefully stop the execution of the system thread. When set to TRUE, the thread terminates its main loop.
+	@details	This global boolean variable acts as a flag to gracefully stop the execution of the system thread. When set to TRUE, the thread terminates its main loop.
 **/
 BOOLEAN Global_ThreadStop = FALSE;
 
 /**
 	@brief		Pointer to the system thread object.
-
-				This global pointer stores a reference to the KTHREAD object corresponding to the created system thread. It is useful for operations like cleanup or validation of the thread status.
+	@details	This global pointer stores a reference to the KTHREAD object corresponding to the created system thread. It is useful for operations like cleanup or validation of the thread status.
 **/
 PKTHREAD Global_ThreadPointer = NULL;
 
@@ -80,8 +77,7 @@ PKTHREAD Global_ThreadPointer = NULL;
 
 /**
 	@brief		Periodically logs a "Hello World" message with a timestamp to the kernel debugger.
-
-				This function runs in a separate system thread and repeatedly logs a message "Hello World" to the kernel debugger at fixed intervals defined by a macro.
+	@details	This function runs in a separate system thread and repeatedly logs a message "Hello World" to the kernel debugger at fixed intervals defined by a macro.
 **/
 VOID
 LocalFunction_PrintHelloWorldPeriodically()
@@ -166,12 +162,11 @@ LocalFunction_PrintHelloWorldPeriodically()
 
 /**
 	@brief		Unloads a Windows kernel-mode driver.
+	@details	This function is called when the driver is being unloaded from memory. It is responsible for cleaning up resources and performing necessary cleanup tasks before the driver is removed from the system. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
 
-				This function is called when the driver is being unloaded from memory. It is responsible for cleaning up resources and performing necessary cleanup tasks before the driver is removed from the system. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
 
-
-				PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver.
+	@see		PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver.
 **/
 VOID
 DriverUnload(
@@ -275,16 +270,14 @@ DriverUnload(
 
 /**
 	@brief		Entry point for a Windows kernel-mode driver.
-	
-				This function is called when the driver is loaded into memory. It initializes the driver and performs necessary setup tasks. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers
+	@details	This function is called when the driver is loaded into memory. It initializes the driver and performs necessary setup tasks. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers
 
 
-				PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
+	@see		PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
 
-
-				PUNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
-	@param		pRegistryPath			Pointer to a UNICODE_STRING structure, containing the driver's registry path as a Unicode string, indicating the driver's location in the Windows registry.
+	@see		PUNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
+	@param[in]	pRegistryPath			Pointer to a UNICODE_STRING structure, containing the driver's registry path as a Unicode string, indicating the driver's location in the Windows registry.
 
 
 	@return		A NTSTATUS value indicating success or an error code if initialization fails.

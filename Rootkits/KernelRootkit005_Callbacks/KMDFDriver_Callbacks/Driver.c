@@ -3,26 +3,26 @@
 
 
 
-// Name:							KernelRootkit005_Callbacks
-// IDE:								Open Visual Studio
-// Template:						Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
-// Project:							Project Name: KMDFDriver_Callbacks -> Solution Name: KernelRootkit005_Callbacks -> Create
-// Source File:						Source Files -> Add -> New Item... -> Driver.c
-// Source Code:						Open Driver.c and copy the corresponding source code
-// Integrity Check:					Properties -> Configuration Properties -> Linker -> Command Line -> Additional Options -> /integritycheck
-// Build Project:					Set Configuration to Release, x64 -> Build -> Build Solution
-// Locate Driver:					C:\Users\%USERNAME%\source\repos\KernelRootkit005_Callbacks\x64\Release\KMDFDriver_Callbacks.sys
-// Virtual Machine:					Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
-// Move Driver:						Copy KMDFDriver_Callbacks.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_Callbacks.sys (VM)
-// Enable Test Mode:				Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
-// Driver Installation:				Open a CMD window as Administrator -> sc.exe create WindowsKernelCallbacks type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_Callbacks.sys"
-// Registered Driver:				Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelCallbacks
-// Service Status:					Run in CMD as Administrator -> sc.exe query WindowsKernelCallbacks -> driverquery.exe
-// Registry Entry:					Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelCallbacks
-// Monitor Messages:				Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
-// Start Routine:					Run in CMD as Administrator -> sc.exe start WindowsKernelCallbacks
-// Clean:							Run in CMD as Administrator -> sc.exe stop WindowsKernelCallbacks
-// Remove:							Run in CMD as Administrator -> sc.exe delete WindowsKernelCallbacks
+// Name:                            KernelRootkit005_Callbacks
+// IDE:                             Open Visual Studio
+// Template:                        Create a new project -> Search for templates (Alt + S) -> Kernel Mode Driver, Empty (KMDF) -> Next
+// Project:                         Project Name: KMDFDriver_Callbacks -> Solution Name: KernelRootkit005_Callbacks -> Create
+// Source File:                     Source Files -> Add -> New Item... -> Driver.c
+// Source Code:                     Open Driver.c and copy the corresponding source code
+// Integrity Check:                 Properties -> Configuration Properties -> Linker -> Command Line -> Additional Options -> /integritycheck
+// Build Project:                   Set Configuration to Release, x64 -> Build -> Build Solution
+// Locate Driver:                   C:\Users\%USERNAME%\source\repos\KernelRootkit005_Callbacks\x64\Release\KMDFDriver_Callbacks.sys
+// Virtual Machine:                 Open VMware Workstation -> Power on (MalwareWindows11) virtual machine
+// Move Driver:                     Copy KMDFDriver_Callbacks.sys (Host) to C:\Users\%USERNAME%\Downloads\KMDFDriver_Callbacks.sys (VM)
+// Enable Test Mode:                Open a CMD window as Administrator -> bcdedit /set testsigning on -> Restart
+// Driver Installation:             Open a CMD window as Administrator -> sc.exe create WindowsKernelCallbacks type=kernel start=demand binpath="C:\Users\%USERNAME%\Downloads\KMDFDriver_Callbacks.sys"
+// Registered Driver:               Open AutoRuns as Administrator -> Navigate to the Drivers tab -> Look for WindowsKernelCallbacks
+// Service Status:                  Run in CMD as Administrator -> sc.exe query WindowsKernelCallbacks -> driverquery.exe
+// Registry Entry:                  Open regedit -> Navigate to HKLM\SYSTEM\CurrentControlSet\Services -> Look for WindowsKernelCallbacks
+// Monitor Messages:                Open DebugView as Administrator -> Enable options ("Capture -> Capture Kernel" and "Capture -> Enable Verbose Kernel Output") -> Close and reopen DebugView as Administrator
+// Start Routine:                   Run in CMD as Administrator -> sc.exe start WindowsKernelCallbacks
+// Clean:                           Run in CMD as Administrator -> sc.exe stop WindowsKernelCallbacks
+// Remove:                          Run in CMD as Administrator -> sc.exe delete WindowsKernelCallbacks
 
 
 
@@ -54,16 +54,14 @@
 	@brief		This function serves as a process creation and termination notification routine. Process-creation callback implemented by a driver to track the system-wide creation and deletion of processes against the driver's internal state. (https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/ntddk/nc-ntddk-pcreate_process_notify_routine).
 
 
-				HANDLE					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#HANDLE
-	@param		parentProcessId			Parent process ID.
+	@see		HANDLE					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#HANDLE
+	@param[in]	parentProcessId			Parent process ID.
 
+	@see		HANDLE					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#HANDLE
+	@param[in]	processId				Process ID.
 
-				HANDLE					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#HANDLE
-	@param		processId				Process ID.
-
-
-				BOOLEAN					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#BOOLEAN
-	@param		create					A boolean flag to indicate whether a process is being created (TRUE) or teminated (FALSE).
+	@see		BOOLEAN					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#BOOLEAN
+	@param[in]	create					A boolean flag to indicate whether a process is being created (TRUE) or teminated (FALSE).
 **/
 VOID
 PcreateProcessNotifyRoutine(
@@ -124,16 +122,14 @@ PcreateProcessNotifyRoutine(
 	@brief		This function serves as an extended process creation notification routine. A callback routine implemented by a driver to inspect and optionally block certain processes based on their command-line parameters or executable names (https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/ntddk/nc-ntddk-pcreate_process_notify_routine_ex).
 
 
-				PEPROCESS				https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/eprocess
-	@param		process					Pointer to a process structure.
+	@see		PEPROCESS				https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/eprocess
+	@param[in]	process					Pointer to a process structure.
 
+	@see		HANDLE					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#HANDLE
+	@param[in]	pid						Process ID.
 
-				HANDLE					https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#HANDLE
-	@param		pid						Process ID.
-
-
-				PPS_CREATE_NOTIFY_INFO	https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/ntddk/ns-ntddk-_ps_create_notify_info
-	@param		createInfo				A pointer to a structure that holds detailed information about the new created process.
+	@see		PPS_CREATE_NOTIFY_INFO	https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/ntddk/ns-ntddk-_ps_create_notify_info
+	@param[in]	createInfo				A pointer to a structure that holds detailed information about the new created process.
 **/
 VOID
 PcreateProcessNotifyRoutineEx(
@@ -157,8 +153,10 @@ PcreateProcessNotifyRoutineEx(
 		// -----------------------------------------------------------------------------------------------------------------
 		// Array of tools to block
 		const wchar_t* blockedTools[] = {
-			L"mspaint.exe",			// Paint
-			L"Procmon.exe",			// Process Monitor
+			// Paint
+			L"mspaint.exe",
+			// Process Monitor
+			L"Procmon.exe",
 		};
 
 
@@ -196,12 +194,11 @@ PcreateProcessNotifyRoutineEx(
 
 /**
 	@brief		Unloads a Windows kernel-mode driver.
-
-				This function is called when the driver is being unloaded from memory. It is responsible for cleaning up resources and performing necessary cleanup tasks before the driver is removed from the system. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
+	@details	This function is called when the driver is being unloaded from memory. It is responsible for cleaning up resources and performing necessary cleanup tasks before the driver is removed from the system. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nc-wdm-driver_unload
 	
 
-				PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver.
+	@see		PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver.
 **/
 VOID
 DriverUnload(
@@ -270,16 +267,14 @@ DriverUnload(
 
 /**
 	@brief		Entry point for a Windows kernel-mode driver.
-	
-				This function is called when the driver is loaded into memory. It initializes the driver and performs necessary setup tasks. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers
+	@details	This function is called when the driver is loaded into memory. It initializes the driver and performs necessary setup tasks. For guidelines and implementation details, see the Microsoft documentation at: https://learn.microsoft.com/en-us/windows-hardware/drivers/wdf/driverentry-for-kmdf-drivers
 
 
-				PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
-	@param		pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
+	@see		PDRIVER_OBJECT			https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ns-wdm-_driver_object
+	@param[in]	pDriverObject			Pointer to a DRIVER_OBJECT structure representing the driver's image in the operating system kernel.
 
-
-				PUNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
-	@param		pRegistryPath			Pointer to a UNICODE_STRING structure, containing the driver's registry path as a Unicode string, indicating the driver's location in the Windows registry.
+	@see		PUNICODE_STRING			https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
+	@param[in]	pRegistryPath			Pointer to a UNICODE_STRING structure, containing the driver's registry path as a Unicode string, indicating the driver's location in the Windows registry.
 
 
 	@return		A NTSTATUS value indicating success or an error code if initialization fails.
