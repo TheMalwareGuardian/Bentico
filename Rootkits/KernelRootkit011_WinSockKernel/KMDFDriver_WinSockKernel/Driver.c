@@ -10,7 +10,8 @@
 // Source File:                     Source Files -> Add -> New Item... -> Driver.c
 // Source Code:                     Open Driver.c and copy the corresponding source code
 // Library Dependencies:            Open Project Properties -> Linker -> Additional Dependencies -> Add '$(DDK_LIB_PATH)Netio.lib;'
-// LibWSK:							
+// LibWSK:                          You should ideally create your own wrapper library for WSK tailored to your project. But if you want something quick and ready-to-go, you can use [Musa.libwsk] from NuGet: Right-click on the project -> Manage NuGet Packages -> Search: "Musa.libwsk" -> Install
+// Include Directories:             Open Project Properties -> C/C++ -> General -> Additional Include Directories -> '$(NuGetPackageRoot)Musa.libwsk\build\native\include;'
 // Build Project:                   Set Configuration to Release, x64 -> Build -> Build Solution
 // Locate App:                      C:\Users\%USERNAME%\source\repos\KernelRootkit011_WinSockKernel\x64\Release\ConsoleApp_DKOM.exe
 // Locate Driver:                   C:\Users\%USERNAME%\source\repos\KernelRootkit011_WinSockKernel\x64\Release\KMDFDriver_WinSockKernel.sys
@@ -33,8 +34,8 @@
 
 
 
-// #pragma warning(disable: 4047)
-// #pragma warning(disable: 4024)
+#pragma warning(disable: 4047)
+#pragma warning(disable: 4024)
 
 
 
@@ -248,6 +249,25 @@ SendHttpRequest()
 	// ---------------------------------------------------------------------------------------------------------------------
 	// Return
 	return STATUS_SUCCESS;
+}
+
+
+
+/**
+	@brief		Cleans up the Windows Socket Kernel (WSK) environment.
+	@details	This function shuts down the WSK subsystem, releasing any allocated resources.
+**/
+VOID
+WinSockKernelCleanup()
+{
+	// ---------------------------------------------------------------------------------------------------------------------
+	// Hello
+	DbgPrint("Benthic Zone WinSockKernel -> KMDFDriverWinSockKernel [Driver.c] (WinSockKernelCleanup) - Cleanup WSK environment\n");
+
+
+	// ---------------------------------------------------------------------------------------------------------------------
+	// Clean
+	WSKCleanup();
 }
 
 
