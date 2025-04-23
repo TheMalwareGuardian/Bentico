@@ -32,7 +32,7 @@
 
 
 
-// #pragma warning(disable: 4201)
+#pragma warning(disable: 4201)
 
 
 
@@ -189,6 +189,11 @@ DriverUnload(
 	_In_		PDRIVER_OBJECT			pDriverObject
 )
 {
+	// ---------------------------------------------------------------------------------------------------------------------
+	// Preventing warnings for unused parameters
+	UNREFERENCED_PARAMETER(pDriverObject);
+
+
 	// ---------------------------------------------------------------------------------------------------------------------
 	// Hello
 
@@ -743,7 +748,7 @@ DriverEntry(
 
 	// The IoCreateDevice routine creates a device object for use by a driver.
 	// https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-iocreatedevice
-	status = IoCreateDevice(DriverObject, 0, NULL, FILE_DEVICE_UNKNOWN, 0, FALSE, &Global_DeviceObject);
+	status = IoCreateDevice(pDriverObject, 0, NULL, FILE_DEVICE_UNKNOWN, 0, FALSE, &Global_DeviceObject);
 
 	// Failed
 	if (!NT_SUCCESS(status))
