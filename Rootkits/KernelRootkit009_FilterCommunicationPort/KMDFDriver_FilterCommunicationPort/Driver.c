@@ -316,6 +316,8 @@ MinifilterSendReceive(
 	// ---------------------------------------------------------------------------------------------------------------------
 	// Prevent warnings for unused parameters
 	UNREFERENCED_PARAMETER(PortCookie);
+	UNREFERENCED_PARAMETER(InputBufferLength);
+	UNREFERENCED_PARAMETER(OutputBufferLength);
 
 
 	// ---------------------------------------------------------------------------------------------------------------------
