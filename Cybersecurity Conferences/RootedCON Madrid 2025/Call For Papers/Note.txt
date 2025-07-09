@@ -1,5 +1,0 @@
-Buenos días,
-
-Subiré las funcionalidades separadas a este github (https://github.com/TheMalwareGuardian/Bentico) para que les sea fácil a los que estén empezando, pero el Rootkit se lo daré exclusivamente a los asistentes a la conferencia.
-
-Muchas gracias y feliz día :)

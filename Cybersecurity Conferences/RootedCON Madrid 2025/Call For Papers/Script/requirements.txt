@@ -1,2 +1,0 @@
-requests==2.31.0
-inquirerpy==0.3.4

@@ -449,8 +449,3 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-
-
-# Hide Rootkit
-BenticoRootkit
-Lab
