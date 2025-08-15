@@ -1,0 +1,69 @@
+// --------------------------------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// START -> LIBRARIES -------------------------------------------------------------------------------------------------------------------------
+// START -> LIBRARIES -------------------------------------------------------------------------------------------------------------------------
+
+
+
+// https://en.wikibooks.org/wiki/Windows_Programming/windows.h
+// The primary C header file for accessing the Win32 API is the <windows.h> header file. To make a Win32 executable, the first step is to include this header file in your source code. The windows.h header file should be included before any other library include, even the C standard library files such as stdio.h or stdlib.h. This is because the windows.h file includes macros and other components that may modify, extend, or replace things in these libraries. This is especially true when dealing with UNICODE, because windows.h will cause all the string functions to use UNICODE instead. Also, because many of the standard C library functions are already included in the Windows kernel, many of these functions will be available to the programmer without needing to load the standard libraries. For example, the function sprintf is included in windows.h automatically. 
+#include <windows.h>
+
+// https://en.wikibooks.org/wiki/C_Programming/stdio.h
+// The C programming language provides many standard library functions for file input and output. These functions make up the bulk of the C standard library header <stdio.h>. The I/O functionality of C is fairly low-level by modern standards; C abstracts all file operations into operations on streams of bytes, which may be "input streams" or "output streams". Unlike some earlier programming languages, C has no direct support for random-access data files; to read from a record in the middle of a file, the programmer must create a stream, seek to the middle of the file, and then read bytes in sequence from the stream. 
+#include <stdio.h>
+
+
+
+// START -> LOCAL -----------------------------------------------------------------------------------------------------------------------------
+// START -> LOCAL -----------------------------------------------------------------------------------------------------------------------------
+
+
+
+#include "Utils/Utils01Device.h"
+
+
+
+// START -> FUNCTIONS -------------------------------------------------------------------------------------------------------------------------
+// START -> FUNCTIONS -------------------------------------------------------------------------------------------------------------------------
+
+
+
+/**
+	@brief      Checks if the kernel-mode driver is currently accessible.
+**/
+BOOL FunctionsDriver_CheckDriverStatus(HANDLE* hDevice)
+{
+	// ---------------------------------------------------------------------------------------------------------------------
+	// Attempt to open a handle to the device
+	*hDevice = UtilsDevice_OpenDevice();
+
+
+	// ---------------------------------------------------------------------------------------------------------------------
+	// If the handle was successfully opened
+	if (*hDevice)
+	{
+
+		// -----------------------------------------------------------------------------------------------------------------
+		// Close it immediately since we only wanted to check if it's accessible
+		UtilsDevice_CloseDevice(hDevice);
+
+
+		// -----------------------------------------------------------------------------------------------------------------
+		// The driver is reachable
+		return TRUE;
+	}
+
+
+	// ---------------------------------------------------------------------------------------------------------------------
+	// If the handle couldn't be opened, the driver is likely not loaded
+	return FALSE;
+}
+
+
+
+// --------------------------------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------------------------------
