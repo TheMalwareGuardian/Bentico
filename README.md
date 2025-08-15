@@ -1,3 +1,23 @@
+# ***🦠 Malware Project (Archived)***
+
+> ⚠️ **This repository is no longer maintained here.**
+>
+> This repository contains the **initial development** of the malware project, including all updates up to the version **presented at DEF CON 33**.
+>
+> ✅ The project has now been moved to a dedicated repository:
+>
+> 👉 **[Benthic (Official Repository)](https://github.com/TheMalwareGuardian/Benthic)**  
+>
+> All **future updates**, new features, documentation, and community support will be maintained **only** in the Benthic repository.
+>
+> Thank you for your interest!
+
+
+---
+---
+---
+
+
 # ***🏴‍☠️ Benthic: Windows Kernel Rootkit***
 
 ![DEF CON 33 Main Stage Talk](https://img.shields.io/badge/DEF%20CON%2033-Main%20Stage%20Talk-informational?style=for-the-badge&logo=hackaday)
